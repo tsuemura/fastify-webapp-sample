@@ -1,0 +1,7 @@
+{
+  "watch": ["src"],
+  "ignore": ["src/**/*.test.ts"],
+  "ext": "ts,mjs,js,json,graphql",
+  "exec": "esbuild `find src \\( -name '*.ts' \\)` --platform=node --outdir=dist --format=cjs && node dist",
+  "legacyWatch": true
+}
