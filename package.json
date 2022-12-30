@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "dev": "nodemon",
+    "db:migrate": "node db/migrate.mjs",
+    "dev": "docker compose up -d && nodemon src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rm -rf build && esbuild `find src \\( -name '*.ts' \\)` --platform=node --outdir=build --bundle",
     "start": "npm run build && node build/index.js"
@@ -23,14 +25,20 @@
   "dependencies": {
     "@fastify/autoload": "^5.6.0",
     "@fastify/postgres": "^5.2.0",
+    "@fastify/view": "^7.3.0",
+    "dotenv": "^16.0.3",
+    "ejs": "^3.1.8",
     "fastify": "^4.10.2",
     "fastify-plugin": "^4.4.0",
-    "pg": "^8.8.0"
+    "pg": "^8.8.0",
+    "postgrator": "^7.1.1"
   },
   "devDependencies": {
+    "@types/ejs": "^3.1.1",
     "@types/node": "^18.11.18",
     "esbuild": "^0.16.12",
     "nodemon": "^2.0.20",
+    "postgrator-cli": "^6.0.0",
     "ts-node": "^10.9.1",
     "typescript": "^4.9.4"
   }
