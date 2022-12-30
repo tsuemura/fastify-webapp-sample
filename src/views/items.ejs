@@ -8,6 +8,6 @@
 </head>
 <body>
   <h1>商品一覧</h1>
-  <%= items.map(item => item.name) %>
+  <%- items.reduce((reducer, item) => (reducer + `<p>${item.name} ${item.description} ￥${item.price} </p>`), '') %>
 </body>
 </html>

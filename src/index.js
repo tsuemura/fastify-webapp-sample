@@ -2,7 +2,10 @@ import fastify from "fastify";
 import view from "@fastify/view"
 import postgres from "@fastify/postgres"
 import ejs from "ejs"
+import * as dotenv from "dotenv"
+import { resourceLimits } from "worker_threads";
 
+dotenv.config()
 const server = fastify();
 
 server.register(view, {
@@ -11,18 +14,18 @@ server.register(view, {
   }
 })
 
+const connectionString = `postgres://${process.env.PGUSER}:${process.env.PGPASSWORD}@${process.env.PGHOST}:${process.env.PGPORT}`
+
 server.register(postgres, {
-  connectionString: 'postgres://admin@admin@localhost:5432'
+  connectionString,
 })
 
 server.get("/items", async (request, reply) => {
-  reply.view("/src/views/items.ejs", {
-    items: [
-      { name: 'foo' },
-      { name: 'bar' },
-    ]
-  })
-  return reply
+  const client = await server.pg.connect()
+  const result = await client.query(
+    "SELECT id, name, description, price FROM items"
+  );
+  await reply.view("/src/views/items.ejs", { items: result.rows })
 })
 
 server.listen({ port: 8080 }, (err, address) => {
