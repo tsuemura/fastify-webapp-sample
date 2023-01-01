@@ -1,0 +1,13 @@
+<tr>
+  <td><%= item.name %></td>
+  <td><%= item.description%></td>
+  <td>￥<%= item.price %></td>
+  <td>
+    <form method="post">
+      <input type="hidden" name="itemId" value="<%= item.id%>" />
+      <label for="quantity-<%= item.id %>">数量</label>
+      <input id="quantity-<%= item.id %>=" type="number" name="quantity" />
+      <input type="submit" value="カートに入れる" />
+    </form>
+  </td>
+</tr>

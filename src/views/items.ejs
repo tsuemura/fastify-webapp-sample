@@ -4,10 +4,23 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/mvp.css@1.12/mvp.css">
   <title>商品一覧</title>
 </head>
 <body>
   <h1>商品一覧</h1>
-  <%- items.reduce((reducer, item) => (reducer + `<p>${item.name} ${item.description} ￥${item.price} </p>`), '') %>
+  <table>
+    <thead>
+      <th>商品名</th>
+      <th>説明</th>
+      <th>値段</th>
+      <th></th>
+    </thead>
+    <tbody>
+      <% items.forEach(item => { %>
+        <%- include('itemDetail', {item}) %>
+      <% }) %>
+    </tbody>
+  </table>
 </body>
 </html>
