@@ -39,7 +39,7 @@ async function main() {
   } catch (error) {
     // If error happened partially through migrations,
     // error object is decorated with appliedMigrations
-    console.error(error.appliedMigrations); // array of migration objects
+    console.error(error); // array of migration objects
   }
 
   // Once done migrating, close your connection.
