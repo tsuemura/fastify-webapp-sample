@@ -24,6 +24,7 @@
   "homepage": "https://github.com/tsuemura/fastify-react-sample#readme",
   "dependencies": {
     "@fastify/autoload": "^5.6.0",
+    "@fastify/formbody": "^7.4.0",
     "@fastify/postgres": "^5.2.0",
     "@fastify/view": "^7.3.0",
     "dotenv": "^16.0.3",
