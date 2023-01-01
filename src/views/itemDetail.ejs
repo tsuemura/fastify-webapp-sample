@@ -5,8 +5,9 @@
   <td>
     <form method="post">
       <input type="hidden" name="itemId" value="<%= item.id%>" />
-      <label for="quantity-<%= item.id %>">数量</label>
-      <input id="quantity-<%= item.id %>=" type="number" name="quantity" />
+      <label>カート内の数量: <%= cartQuantity || 0 %></label>
+      <label for="quantity-<%= item.id %>">カートに入れる数量</label>
+      <input min=0 max=10 step=1 placeholder=0 id="quantity-<%= item.id %>=" type="number" name="quantity" />
       <input type="submit" value="カートに入れる" />
     </form>
   </td>
