@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/mvp.css@1.12/mvp.css">
+  <style>
+    body{
+      margin: 1rem;
+    }
+  </style>
+  <title>注文する</title>
+</head>
+<body>
+  <% if (!items) { %>
+    <%= "カートが空です" %>
+  <% } else { %>
+    <h2> 注文中の商品 </h2>
+    <ul>
+      <% for (const item in items) { %>
+        <%- include('orderItem.ejs', {items, item}) %>
+      <% } /* end of for block */ %>
+    </ul>
+    <form>
+      <label for="fullname">お名前（受取時に必要です）</label>
+      <input id="fullname" name="fullname" />
+      <label for="tel">電話番号（連絡時に必要です）</label>
+      <input id="tel" type="tel" name="tel" />
+      <input type="submit" value="注文を確定する"/>
+    </form>
+  <% } /* end of if block */%>
+  <a href="/items"">商品を追加する</a>
+</body>
+</html>

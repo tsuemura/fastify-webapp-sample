@@ -66,6 +66,13 @@ server.post("/items", async (request, reply) => {
   await reply.redirect(302, '/items')
 })
 
+server.get("/order", async (request, reply) => {
+
+  await reply.view("/src/views/order.ejs", {
+    items: request.session.items
+  })
+})
+
 server.listen({ port: 8080 }, (err, address) => {
   if (err) {
     console.error(err);
