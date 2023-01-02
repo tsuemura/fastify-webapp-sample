@@ -1,17 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://unpkg.com/mvp.css@1.12/mvp.css">
-  <style>
-    body{
-      margin: 1rem;
-    }
-  </style>
-  <title>注文する</title>
-</head>
+<%- include('layouts/header', {title: '注文する'}) %>
 <body>
   <% if (!items) { %>
     <%= "カートが空です" %>
@@ -22,7 +9,7 @@
         <%- include('orderItem.ejs', {items, item}) %>
       <% } /* end of for block */ %>
     </ul>
-    <form>
+    <form method="POST">
       <label for="fullname">お名前（受取時に必要です）</label>
       <input id="fullname" name="fullname" />
       <label for="tel">電話番号（連絡時に必要です）</label>
