@@ -49,7 +49,7 @@ passport.use('local', new LocalStrategy(
 ))
 
 passport.registerUserSerializer(async (user, request) => user.id)
-passport.registerUserDeserializer((id, request) => ({ id: 1, username: 'admin'}))
+passport.registerUserDeserializer((id, request) => ({ id: 1, username: 'admin', isAdmin: true}))
 
 server.register(formbody)
 
@@ -94,6 +94,23 @@ server.post("/items", async (request, reply) => {
 
   await reply.redirect(302, '/order')
 })
+
+server.get(
+  "/items/add",
+  {
+    preValidation: passport.authenticate("local", { authInfo: false },
+      (request, reply) => {
+        console.log(request.user)
+        if (!request.user.isAdmin) {
+          return reply.redirect(302, '/login')
+        }
+      }
+    ),
+  },
+  async (request, reply) => {
+    await reply.send("you can see it!");
+  }
+);
 
 server.get("/order", async (request, reply) => {
 
