@@ -5,6 +5,9 @@ import connectPgSimple from "connect-pg-simple"
 import formbody from "@fastify/formbody"
 import session from "@fastify/session"
 import cookie from "@fastify/cookie"
+import { Authenticator } from "@fastify/passport";
+import LocalStrategy from "passport-local"
+
 
 import ejs from "ejs"
 import * as dotenv from "dotenv"
@@ -32,12 +35,38 @@ server.register(session, {
   cookie: process.env.NODE_ENV == "development" ? { secure: false } : {},
 });
 
+const passport = new Authenticator();
+server.register(passport.initialize());
+server.register(passport.secureSession());
+
+passport.use('local', new LocalStrategy(
+  function (username, password, done) {
+    if (username == 'admin' && password == 'admin') {
+      return done(null, {id: 1, username: 'admin'})
+    }
+    return done (null, false)
+  }
+))
+
+passport.registerUserSerializer(async (user, request) => user.id)
+passport.registerUserDeserializer((id, request) => ({ id: 1, username: 'admin'}))
 
 server.register(formbody)
 
 server.register(postgres, {
   connectionString
 })
+
+server.get("/login", async (request, reply) => {
+  await reply.view("/src/views/login.ejs");
+});
+
+server.post("/login",
+  { preValidation: passport.authenticate('local', { successRedirect: '/items', authInfo: false } ) },
+  async (request, reply) => {
+    reply.redirect('/items')
+  }
+);
 
 server.get("/items", async (request, reply) => {
   const client = await server.pg.connect()
@@ -136,8 +165,6 @@ server.post("/order", async (request, reply) => {
     (total, orderedItem) => ( total + (orderedItem.price * orderedItem.quantity)),
     0
   );
-
-  console.log(orderedItems)
 
   await reply.view('/src/views/orderComplete.ejs', { orderedItems, totalPrice })
 })

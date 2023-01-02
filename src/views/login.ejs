@@ -1,0 +1,11 @@
+<%- include('layouts/header', {title: 'ログイン'}) %>
+<body>
+  <h2>ログイン</h2>
+  <form method="POST" action="/login">
+    <label for="username">ユーザー名</label>
+    <input id="username" type="text" name="username"/>
+    <label for="password">パスワード</label>
+    <input id="password" type="password" name="password"/>
+    <input type="submit" value="ログイン"/>
+  </form>
+</body>
