@@ -9,6 +9,9 @@
       <label for="quantity-<%= item.id %>">カートに入れる数量</label>
       <input min=0 max=10 step=1 placeholder=0 id="quantity-<%= item.id %>=" type="number" name="quantity" />
       <input type="submit" value="カートに入れる" />
+      <% if (user?.isAdmin) { %>
+        <a href="<%= `/items/${item.id}/edit` %>">商品を編集</a>
+      <% }%>
     </form>
   </td>
 </tr>

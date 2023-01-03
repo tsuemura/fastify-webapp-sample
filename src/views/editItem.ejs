@@ -1,0 +1,25 @@
+<%- include('layouts/header', { title: "商品編集" } ) %>
+<body>
+  <h2>商品編集</h2>
+  <% if (modified) {%>
+    <p>
+      <span>商品が編集されました</span>
+      <ul>
+        <li><%= item.id %></li>
+        <li><%= item.name %></li>
+        <li><%= item.description %></li>
+        <li><%= item.price %></li>
+      </ul>
+    </p>
+  <% } %>
+  <form method="POST" action="/items/<%= item.id %>/edit">
+    <label for="name">商品名</label>
+    <input type="hidden" value="<%= item.id %>">
+    <input id="name" name="name" value="<%= item.name %>"/>
+    <label for="description">商品説明</label>
+    <input id="description" name="description" value="<%= item.description %>" />
+    <label for="price">価格</label>
+    <input id="price" name="price" value="<%= item.price %>" />
+    <input type="submit" value="編集"/>
+  </form>
+</body>

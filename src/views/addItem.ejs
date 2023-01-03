@@ -1,0 +1,24 @@
+<%- include('layouts/header', { title: "商品追加" } ) %>
+<body>
+  <h2>商品追加</h2>
+  <% if (item) {%>
+    <p>
+      <span>商品が追加されました</span>
+      <ul>
+        <li><%= item.id %></li>
+        <li><%= item.name %></li>
+        <li><%= item.description %></li>
+        <li><%= item.price %></li>
+      </ul>
+    </p>
+  <% } %>
+  <form method="POST" action="/items/add">
+    <label for="name">商品名</label>
+    <input id="name" name="name" />
+    <label for="description">商品説明</label>
+    <input id="description" name="description" />
+    <label for="price">価格</label>
+    <input id="price" name="price" />
+    <input type="submit" value="追加"/>
+  </form>
+</body>
