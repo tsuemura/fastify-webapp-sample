@@ -7,6 +7,7 @@ import authConfig from "./lib/authConfig.js";
 import loginRoutes from "./routes/login.js";
 import itemRoutes from "./routes/items.js";
 import orderRoutes from "./routes/order.js";
+import signUpRoutes from "./routes/signUp.js";
 import * as dotenv from "dotenv"
 
 dotenv.config()
@@ -19,18 +20,19 @@ server.register(view, {
 })
 
 server.register(formbody)
-const passport = await authConfig(server)
 
 const connectionString = `postgres://${process.env.PGUSER}:${process.env.PGPASSWORD}@${process.env.PGHOST}:${process.env.PGPORT}`;
 server.register(postgres, {
   connectionString
 })
 
+const passport = await authConfig(server)
+
 // Routes
 server.register(loginRoutes, { passport })
 server.register(itemRoutes, { passport })
 server.register(orderRoutes, { passport })
-
+server.register(signUpRoutes, { passport })
 
 server.listen({ port: 8080 }, (err, address) => {
   if (err) {

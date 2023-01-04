@@ -23,20 +23,30 @@ export default async function authConfig(server) {
 
   passport.use(
     "local",
-    new LocalStrategy(function (username, password, done) {
-      if (username == "admin" && password == "admin") {
-        return done(null, { id: 1, username: "admin" });
+    new LocalStrategy(async function (username, password, done) {
+      const client = await server.pg.connect();
+
+      const { rows } = await client.query("SELECT id, username, password FROM users WHERE username = $1", [username])
+      const user = rows[0]
+      if (user.password === password) {
+        return done(null, user)
       }
+
       return done(null, false);
     })
   );
 
   passport.registerUserSerializer(async (user, request) => user.id);
-  passport.registerUserDeserializer((id, request) => ({
-    id: 1,
-    username: "admin",
-    isAdmin: true,
-  }));
+  passport.registerUserDeserializer(async (id,  request) => {
+    const client = await server.pg.connect();
+    const { rows } = await client.query('SELECT id, username, password FROM users WHERE id = $1', [id])
+    const user = rows[0]
+    return {
+      id: user.id,
+      username: user.username,
+      isAdmin: user.is_admin
+    }
+  });
 
   return passport
 }

@@ -1,7 +1,11 @@
 <%- include('layouts/header', {title: '商品一覧'}) %>
 <body>
   <p>
-    <a href="order">カートを見る</a>
+    <% if (locals.user) { %>
+      <span><%= user.username %> さん こんにちは</span>
+      <a href="/logout">ログアウト</a>
+    <% } %>
+      <a href="/order">カートを見る</a>
   </p>
   <table>
     <thead>
