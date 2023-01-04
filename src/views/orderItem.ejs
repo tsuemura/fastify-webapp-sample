@@ -1,3 +1,6 @@
-<li>
-  <%= `商品ID: ${item} 数量: ${items[item]}` %>
-</li>
+<tr>
+  <td><%= item.name %></td>
+  <td><%= item.quantity %></td>
+  <td>￥<%= item.price %>（￥<%= item.price * item.quantity%>）</td>
+
+</tr>

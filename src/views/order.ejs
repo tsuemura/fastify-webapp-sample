@@ -3,13 +3,21 @@
   <% if (!items) { %>
     <%= "カートが空です" %>
   <% } else { %>
-    <h2> 注文中の商品 </h2>
-    <ul>
-      <% for (const item in items) { %>
-        <%- include('orderItem.ejs', {items, item}) %>
-      <% } /* end of for block */ %>
-    </ul>
+    <h2> カートの中の商品 </h2>
+    <table>
+      <thead>
+        <th>商品名</th>
+        <th>数量</th>
+        <th>金額（合計）</th>
+      </thead>
+      <tbody>
+        <% items.forEach(item => { %>
+          <%- include('orderItem.ejs', {item}) %>
+        <% }) /* end of for block */ %>
+      </tbody>
+    </table>
     <form method="POST">
+      <h3>購入する</h3>
       <label for="fullname">お名前（受取時に必要です）</label>
       <input id="fullname" name="fullname" />
       <label for="tel">電話番号（連絡時に必要です）</label>

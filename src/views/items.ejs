@@ -4,6 +4,8 @@
     <% if (locals.user) { %>
       <span><%= user.username %> さん こんにちは</span>
       <a href="/logout">ログアウト</a>
+    <% } else { %>
+      <span>ログインしていません。</span><a href="/login">ログインする</a>
     <% } %>
       <a href="/order">カートを見る</a>
   </p>
