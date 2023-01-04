@@ -1,20 +1,13 @@
 import fastify from "fastify";
 import view from "@fastify/view"
 import postgres from "@fastify/postgres"
-import connectPgSimple from "connect-pg-simple"
 import formbody from "@fastify/formbody"
-import session from "@fastify/session"
-import cookie from "@fastify/cookie"
-import { Authenticator } from "@fastify/passport";
-import LocalStrategy from "passport-local"
-
-
 import ejs from "ejs"
+import authConfig from "./lib/authConfig.js";
 import * as dotenv from "dotenv"
 
 dotenv.config()
 const server = fastify();
-const pgSession = new connectPgSimple(session)
 
 server.register(view, {
   engine: {
@@ -22,37 +15,10 @@ server.register(view, {
   }
 })
 
-server.register(cookie)
-
-const connectionString = `postgres://${process.env.PGUSER}:${process.env.PGPASSWORD}@${process.env.PGHOST}:${process.env.PGPORT}`
-
-// allow insecure cookie only during development
-server.register(session, {
-  secret: process.env.SESSION_SECRET,
-  store: new pgSession({
-    conString: connectionString,
-  }),
-  cookie: process.env.NODE_ENV == "development" ? { secure: false } : {},
-});
-
-const passport = new Authenticator();
-server.register(passport.initialize());
-server.register(passport.secureSession());
-
-passport.use('local', new LocalStrategy(
-  function (username, password, done) {
-    if (username == 'admin' && password == 'admin') {
-      return done(null, {id: 1, username: 'admin'})
-    }
-    return done (null, false)
-  }
-))
-
-passport.registerUserSerializer(async (user, request) => user.id)
-passport.registerUserDeserializer((id, request) => ({ id: 1, username: 'admin', isAdmin: true}))
-
 server.register(formbody)
+const passport = authConfig(server)
 
+const connectionString = `postgres://${process.env.PGUSER}:${process.env.PGPASSWORD}@${process.env.PGHOST}:${process.env.PGPORT}`;
 server.register(postgres, {
   connectionString
 })
@@ -76,7 +42,7 @@ server.get("/items", async (request, reply) => {
 
   await reply.view("/src/views/items.ejs", {
     items: result.rows,
-    itemsInCart: request.session.items,
+    itemsInCart: request.session?.items,
     user: request.user
   })
 })
