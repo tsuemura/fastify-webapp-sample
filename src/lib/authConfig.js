@@ -3,6 +3,7 @@ import session from "@fastify/session";
 import cookie from "@fastify/cookie";
 import LocalStrategy from "passport-local"
 import connectPgSimple from "connect-pg-simple"
+import hashPassword from "./hashPassword.js";
 
 export default async function authConfig(server) {
   const passport = new Authenticator();
@@ -28,7 +29,12 @@ export default async function authConfig(server) {
 
       const { rows } = await client.query("SELECT id, username, password FROM users WHERE username = $1", [username])
       const user = rows[0]
-      if (user.password === password) {
+      if (!user) {
+        return done(null, false)
+      }
+
+      const hashedPassword = await hashPassword(password)
+      if (hashedPassword === user.password) {
         return done(null, user)
       }
 
