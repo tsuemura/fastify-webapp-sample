@@ -45,7 +45,7 @@ export default async function authConfig(server) {
   passport.registerUserSerializer(async (user, request) => user.id);
   passport.registerUserDeserializer(async (id,  request) => {
     const client = await server.pg.connect();
-    const { rows } = await client.query('SELECT id, username, password FROM users WHERE id = $1', [id])
+    const { rows } = await client.query('SELECT id, username, is_admin FROM users WHERE id = $1', [id])
     const user = rows[0]
     return {
       id: user.id,
