@@ -14,7 +14,7 @@ export default async function authConfig(server) {
   server.register(session, {
     secret: process.env.SESSION_SECRET,
     store: new pgSession({
-      conString: connectionString,
+      connectionString
     }),
     cookie: process.env.NODE_ENV == "development" ? { secure: false } : {},
   });
@@ -45,12 +45,14 @@ export default async function authConfig(server) {
   passport.registerUserSerializer(async (user, request) => user.id);
   passport.registerUserDeserializer(async (id,  request) => {
     const client = await server.pg.connect();
-    const { rows } = await client.query('SELECT id, username, is_admin FROM users WHERE id = $1', [id])
+    const { rows } = await client.query('SELECT id, username, is_admin, fullname, tel FROM users WHERE id = $1', [id])
     const user = rows[0]
     return {
       id: user.id,
       username: user.username,
-      isAdmin: user.is_admin
+      isAdmin: user.is_admin,
+      fullname: user.fullname,
+      tel: user.tel
     }
   });
 

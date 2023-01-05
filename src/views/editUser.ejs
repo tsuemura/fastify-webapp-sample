@@ -1,0 +1,12 @@
+<%- include('layouts/header', {title: 'ユーザー情報を編集'}) %>
+
+<body>
+  <h2>ユーザー情報を編集</h2>
+  <form method="POST" action="/users/<%= user.id %>/edit">
+    <label for="fullname">お名前（フルネーム）</label>
+    <input id="fullname" name="fullname" type="text" value="<%= user.fullname %>"/>
+    <label for="tel">連絡先</label>
+    <input id="tel" name="tel" type="tel" value="<%= user.tel %>"/>
+    <input type="submit" value="変更" />
+  </form>
+</body>

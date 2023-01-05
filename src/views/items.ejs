@@ -2,7 +2,7 @@
 <body>
   <p>
     <% if (locals.user) { %>
-      <span><%= user.username %> さん こんにちは</span>
+      <span><a href="/users/<%= user.id%>/edit"><%= user.username %></a> さん こんにちは</span>
       <a href="/logout">ログアウト</a>
     <% } else { %>
       <span>ログインしていません。</span><a href="/login">ログインする</a><a href="/signup">新規登録</a>

@@ -9,6 +9,7 @@ import itemRoutes from "./routes/items.js";
 import orderRoutes from "./routes/order.js";
 import signUpRoutes from "./routes/signUp.js";
 import * as dotenv from "dotenv"
+import usersRoute from "./routes/users.js";
 
 dotenv.config()
 const server = fastify();
@@ -33,6 +34,7 @@ server.register(loginRoutes, { passport })
 server.register(itemRoutes, { passport })
 server.register(orderRoutes, { passport })
 server.register(signUpRoutes, { passport })
+server.register(usersRoute, { passport })
 
 server.listen({ port: 8080 }, (err, address) => {
   if (err) {
