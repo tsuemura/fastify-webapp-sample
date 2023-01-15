@@ -1,10 +1,10 @@
 export default async function orderRoutes(server, options) {
   const client = await server.pg.connect();
 
-  const order = async (fullname, tel, receiveTime) => {
+  const order = async (fullname, tel, receiveTime, user_id) => {
     const { rows } = await client.query(
-      "INSERT INTO orders (customer_name, customer_tel, customer_receive_time) VALUES ($1, $2, $3) RETURNING id",
-      [fullname, tel, receiveTime]
+      "INSERT INTO orders (customer_name, customer_tel, customer_receive_time, user_id) VALUES ($1, $2, $3, $4) RETURNING id",
+      [fullname, tel, receiveTime, user_id]
       );
       return rows[0].id;
   };
@@ -51,7 +51,7 @@ export default async function orderRoutes(server, options) {
   server.post("/order", async (request, reply) => {
     const items = request.session.items;
     const { fullname, tel, receiveTime } = request.body;
-    const orderId = await order(fullname, tel, receiveTime);
+    const orderId = await order(fullname, tel, receiveTime, request?.user?.id);
 
     const itemIds = Object.keys(items);
     const orderedItems = await getOrderedItems(itemIds);
