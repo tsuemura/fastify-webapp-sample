@@ -13,15 +13,15 @@
       <tbody>
         <% items.forEach(item => { %>
           <%- include('orderItem.ejs', {item}) %>
-        <% }) /* end of for block */ %>
+        <% } ) %>
       </tbody>
     </table>
     <form method="POST">
       <h3>購入する</h3>
       <label for="fullname">お名前（受取時に必要です）</label>
-      <input id="fullname" name="fullname" />
+      <input id="fullname" name="fullname" value="<%= user?.fullname %>" />
       <label for="tel">電話番号（連絡時に必要です）</label>
-      <input id="tel" type="tel" name="tel" />
+      <input id="tel" type="tel" name="tel" value="<%= user?.tel %>"/>
       <label for="receiveTime">受け取り目安時間</label>
       <input id="receiveTime" name="receiveTime" type="time"/>
       <input type="submit" value="注文を確定する"/>

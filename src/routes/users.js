@@ -12,7 +12,8 @@ export default async function usersRoute(server, options) {
       await reply.redirect(403, "/items");
     }
     const { fullname, tel } = request.body
-    await client.query("UPDATE users SET fullname = $1, tel = $2 WHERE id = $3", [fullname, tel, request.params.id])
-    await reply.view("/src/views/editUser.ejs", { user: request.user });
+    const { rows } = await client.query("UPDATE users SET fullname = $1, tel = $2 WHERE id = $3 RETURNING fullname, tel" , [fullname, tel, request.params.id])
+    const modifiedUser = rows[0]
+    await reply.view("/src/views/editUser.ejs", { user: modifiedUser });
   })
 }

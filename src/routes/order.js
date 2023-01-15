@@ -40,10 +40,11 @@ export default async function orderRoutes(server, options) {
 
   server.get("/order", async (request, reply) => {
     const items = request.session.items;
-    const orderedItems = await getOrderedItems(items)
-    console.log(orderedItems)
+    const orderedItems = items ? await getOrderedItems(items) : undefined
+
     await reply.view("/src/views/order.ejs", {
-      items: orderedItems
+      items: orderedItems,
+      user: request.user,
     });
   });
 
