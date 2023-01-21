@@ -14,6 +14,7 @@ export default async function usersRoute(server, options) {
     const { fullname, tel } = request.body
     const { rows } = await client.query("UPDATE users SET fullname = $1, tel = $2 WHERE id = $3 RETURNING fullname, tel" , [fullname, tel, request.params.id])
     const modifiedUser = rows[0]
+    client.release()
     await reply.view("/src/views/editUser.ejs", { user: modifiedUser });
   })
 

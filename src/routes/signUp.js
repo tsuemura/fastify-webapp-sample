@@ -24,6 +24,7 @@ export default async function signUpRoutes(server, options) {
           isAdmin: user.is_admin
         }
       )
+      client.release()
       await reply.redirect('/items')
     } catch (e) {
       reply.view('src/views/signup.ejs', { errorMessage: 'ユーザー名が既に使われているか、利用出来ない文字が含まれています' })

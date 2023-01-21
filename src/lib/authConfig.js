@@ -4,17 +4,24 @@ import cookie from "@fastify/cookie";
 import LocalStrategy from "passport-local"
 import connectPgSimple from "connect-pg-simple"
 import hashPassword from "./hashPassword.js";
+import pg from 'pg';
 
 export default async function authConfig(server) {
   const passport = new Authenticator();
   server.register(cookie);
-  const connectionString = `postgres://${process.env.PGUSER}:${process.env.PGPASSWORD}@${process.env.PGHOST}:${process.env.PGPORT}`;
+  const pgPool = new pg.Pool({
+    host: process.env.PGHOST,
+    port: process.env.PGPORT,
+    user: process.env.PGUSER,
+    password: process.env.PGPASSWORD,
+    max: 20,
+  });
   const pgSession = new connectPgSimple(session)
   // allow insecure cookie only during development
   server.register(session, {
     secret: process.env.SESSION_SECRET,
     store: new pgSession({
-      connectionString
+      pool: pgPool
     }),
     cookie: process.env.NODE_ENV == "development" ? { secure: false } : {},
   });
@@ -29,6 +36,7 @@ export default async function authConfig(server) {
 
       const { rows } = await client.query("SELECT id, username, password FROM users WHERE username = $1", [username])
       const user = rows[0]
+      client.release()
       if (!user) {
         return done(null, false)
       }
@@ -47,6 +55,7 @@ export default async function authConfig(server) {
     const client = await server.pg.connect();
     const { rows } = await client.query('SELECT id, username, is_admin, fullname, tel FROM users WHERE id = $1', [id])
     const user = rows[0]
+    client.release()
     return {
       id: user.id,
       username: user.username,
@@ -58,4 +67,5 @@ export default async function authConfig(server) {
 
   return passport
 }
+
 

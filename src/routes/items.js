@@ -6,6 +6,7 @@ export default async function itemRoutes(server, options) {
     const result = await client.query(
       "SELECT id, name, description, price FROM items"
     );
+    client.release()
 
     await reply.view("/src/views/items.ejs", {
       items: result.rows,
@@ -67,6 +68,7 @@ export default async function itemRoutes(server, options) {
         "INSERT INTO items (name, description, price) VALUES ($1, $2, $3) RETURNING id, name, description, price",
         [name, description, price]
       );
+      client.release()
       await reply.view("/src/views/addItem.ejs", { item: rows[0] });
     }
   );
@@ -92,6 +94,7 @@ export default async function itemRoutes(server, options) {
         [itemId]
       );
       const item = rows[0];
+      client.release()
       await reply.view("/src/views/editItem.ejs", { item, modified: false });
     }
   );
@@ -118,6 +121,7 @@ export default async function itemRoutes(server, options) {
         [itemId, name, description, price]
       );
       const item = rows[0];
+      client.release()
       await reply.view("/src/views/editItem.ejs", { item, modified: true });
     }
   );

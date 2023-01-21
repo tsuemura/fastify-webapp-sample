@@ -6,6 +6,7 @@ export default async function orderRoutes(server, options) {
       "INSERT INTO orders (customer_name, customer_tel, customer_receive_time, user_id) VALUES ($1, $2, $3, $4) RETURNING id",
       [fullname, tel, receiveTime, user_id]
     );
+    client.release()
     return rows[0].id;
   };
 
