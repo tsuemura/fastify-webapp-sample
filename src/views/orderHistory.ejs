@@ -1,0 +1,31 @@
+<%- include('layouts/header', {title: '注文履歴'}) %>
+
+<% orders.forEach(order => { %>
+<body>
+    <section>
+      <h2> 注文番号 <%= order.order_id %> </h2>
+      <p>注文日 <%= order.created_at %></p>
+      <p>受け取り予定時間 <%= order.customer_receive_time %></p>
+
+      <table>
+        <thead>
+          <th>商品名</th>
+          <th>価格</th>
+          <th>数量</th>
+        </thead>
+        <tbody>
+          <% order.items.forEach(item => { %>
+
+            <tr>
+              <td><%= item.name %></td>
+              <td><%= item.price %></td>
+              <td><%= item.quantity %></td>
+            </tr>
+
+            <% }) %>
+        </tbody>
+      </table>
+    </section>
+
+  <% }) %>
+</body>

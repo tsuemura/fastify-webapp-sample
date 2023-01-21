@@ -16,4 +16,5 @@ export default async function usersRoute(server, options) {
     const modifiedUser = rows[0]
     await reply.view("/src/views/editUser.ejs", { user: modifiedUser });
   })
+
 }

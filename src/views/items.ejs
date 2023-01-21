@@ -3,6 +3,7 @@
   <p>
     <% if (locals.user) { %>
       <span><a href="/users/<%= user.id%>/edit"><%= user.username %></a> さん こんにちは</span>
+      <a href="/order/history?user_id=<%= user.id %>">注文履歴を見る</a>
       <a href="/logout">ログアウト</a>
     <% } else { %>
       <span>ログインしていません。</span><a href="/login">ログインする</a><a href="/signup">新規登録</a>
