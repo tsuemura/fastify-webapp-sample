@@ -39,7 +39,7 @@ export default async function orderRoutes(server, options) {
     }));
   };
 
-  const getOrders = async (user_id) => {
+  const getOrdersByUserId = async (user_id) => {
     const { rows } = await client.query(
       `SELECT
         orders.id order_id,
@@ -98,6 +98,68 @@ export default async function orderRoutes(server, options) {
     }, []);
   };
 
+  const getOrders = async () => {
+    const { rows } = await client.query(
+      `SELECT
+        orders.id order_id,
+        items.name name,
+        items.price price,
+        order_items.quantity quantity,
+        orders.created_at created_at,
+        orders.customer_receive_time customer_receive_time,
+        orders.customer_name,
+        orders.customer_tel,
+        orders.customer_receive_time
+      FROM
+        orders,
+        items,
+        order_items
+      WHERE
+        orders.id = order_items.order_id
+        AND items.id = order_items.item_id
+      `
+    );
+
+    /**
+     * Compose object like this:
+     * [
+     *  {
+     *    order_id: 1,
+     *    created_at: '2022-01-01'
+     *    customer_receive_time: '11:15'
+     *    items: [
+     *      {
+     *        order_id: 1,
+     *        name: "鶏唐揚弁当",
+     *        price: 500,
+     *        quantity:3
+     *        created_at: '2022-01-01'
+     *        customer_receive_time: '11:15'
+     *      }
+     *    ]
+     *  }
+     * ]
+     */
+    return rows.reduce((orders, item) => {
+      const index = orders.findIndex(
+        (order) => (order.order_id == item.order_id)
+      );
+      if (index >= 0) {
+        orders[index].items.push(item);
+      } else {
+        orders.push({
+          order_id: item.order_id,
+          customer_name: item.customer_name,
+          customer_tel: item.customer_tel,
+          created_at: item.created_at,
+          customer_receive_time: item.customer_receive_time,
+          items: [item],
+        });
+      }
+      return orders;
+    }, []);
+  };
+
   server.get("/order", async (request, reply) => {
     const items = request.session.items;
     const orderedItems = items ? await getOrderedItems(items) : undefined
@@ -140,7 +202,9 @@ export default async function orderRoutes(server, options) {
 
   server.get('/order/history', async (request, reply) => {
     const { user_id } = request.query
-    if (!(request.user.is_admin || user_id == request.user.id)) {
+
+    // if user id is not matched with the current user and the user is not admin, it will redirect to the order
+    if (user_id != request.user.id && !request.user.isAdmin) {
       return reply.redirect(302, '/order')
     }
 
@@ -149,10 +213,18 @@ export default async function orderRoutes(server, options) {
       return reply.redirect(302, '/order')
     }
 
-    const orders = await getOrders(user_id)
+    const orders = await getOrdersByUserId(user_id)
 
-    console.log(orders)
     await reply.view('src/views/orderHistory.ejs', {orders})
+  })
+
+  server.get('/order/manage', async (request, reply) => {
+    // if user_id is not specified and the current user is an admin, it will show all histories
+    if (!request.user.isAdmin) {
+      return reply.redirect(302, '/order')
+    }
+    const orders = await getOrders();
+    return reply.view("src/views/orderManage.ejs", { orders });
   })
 }
 

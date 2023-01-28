@@ -1,5 +1,14 @@
 <tr>
-  <td><%= item.name %></td>
+  <td>
+    <% if (user) { %>
+      <% if (item.favorite) { %>
+        <a href="<%= `/items/${item.id}/unfavorite` %>">♥</a>
+      <% } else { %>
+        <a href="<%= `/items/${item.id}/favorite`%>">♡</a>
+      <% }%>
+    <% } %>
+    <%= item.name %>
+  </td>
   <td><%= item.description%></td>
   <td>￥<%= item.price %></td>
   <td>

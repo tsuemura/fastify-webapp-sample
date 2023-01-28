@@ -3,11 +3,27 @@ export default async function itemRoutes(server, options) {
 
   server.get("/items", async (request, reply) => {
     const client = await server.pg.connect();
-    const result = await client.query(
-      "SELECT id, name, description, price FROM items"
-    );
-    client.release()
+    let result
+    if (request.user) {
+      result = await client.query(
+        `SELECT
+          items.id,
+          items.name,
+          items.description,
+          items.price,
+          uf.id as favorite
+        FROM
+          items
+          LEFT JOIN ( SELECT * FROM users_favorites WHERE user_id = $1 ) uf ON uf.item_id = items.id`,
+        [request.user.id]
+      );
+    } else {
+      result = await client.query(
+        "SELECT items.id, items.name, items.description, items.price FROM items"
+      )
+    }
 
+    client.release()
     await reply.view("/src/views/items.ejs", {
       items: result.rows,
       itemsInCart: request.session?.items,
@@ -123,6 +139,44 @@ export default async function itemRoutes(server, options) {
       const item = rows[0];
       client.release()
       await reply.view("/src/views/editItem.ejs", { item, modified: true });
+    }
+  );
+
+  server.get(
+    "/items/:itemId/favorite",
+    async (request, reply) => {
+      if (!request.user) {
+        await reply.redirect(302, '/items')
+      }
+      const client = await server.pg.connect();
+      const { itemId } = request.params;
+      try {
+        await client.query(
+          "INSERT INTO users_favorites (user_id, item_id) VALUES ($1, $2)",
+          [request.user.id, itemId]
+        )
+      } catch {}
+      client.release()
+      await reply.redirect(302, "/items");
+    }
+  );
+
+  server.get(
+    "/items/:itemId/unfavorite",
+    async (request, reply) => {
+      if (!request.user) {
+        await reply.redirect(302, '/items')
+      }
+      const client = await server.pg.connect();
+      const { itemId } = request.params;
+      try {
+        const { rows } = await client.query(
+          "DELETE FROM users_favorites WHERE user_id = $1 and item_id = $2",
+          [request.user.id, itemId]
+        )
+      } catch {}
+      client.release()
+      await reply.redirect(302, "/items");
     }
   );
 }

@@ -8,6 +8,9 @@
     <% } else { %>
       <span>ログインしていません。</span><a href="/login">ログインする</a><a href="/signup">新規登録</a>
     <% } %>
+    <% if (user?.isAdmin) { %>
+      <a href="/order/manage">注文を管理する</a>
+    <% } %>
       <a href="/order">カートを見る</a>
   </p>
   <table>
