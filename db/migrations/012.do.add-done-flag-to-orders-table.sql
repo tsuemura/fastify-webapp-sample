@@ -1,0 +1,2 @@
+ALTER TABLE orders
+    ADD COLUMN done BOOLEAN DEFAULT false

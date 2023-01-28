@@ -1,0 +1,47 @@
+<%- include('layouts/header', {title: '注文管理'}) %>
+
+<body>
+  <header>
+    <h2>注文管理</h2>
+  </header>
+  <main>
+    <% orders.forEach(order => { %>
+      <section>
+        <aside>
+          <h3> 注文番号 <%= order.order_id %> </h3>
+          <ul>
+            <li><%= order.customer_name %> 様</li>
+            <li>注文日 <%= order.created_at %></li>
+            <li>ご連絡先 <%= order.customer_tel %> </li>
+            <li>受け取り予定時間 <%= order.customer_receive_time %></li>
+          </ul>
+          <table>
+            <thead>
+              <tr>
+                <th>商品名</th>
+                <th>価格</th>
+                <th>数量</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% order.items.forEach(item => { %>
+                <tr>
+                  <td><%= item.name %></td>
+                  <td><%= item.price %></td>
+                  <td><%= item.quantity %></td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        <% if (!order.done) { %>
+          <form method="POST" action="<%= `/order/${order.order_id}/receive` %>" style="border: 0px; box-shadow: none;">
+            <input type="submit" value="この注文を引き渡しました" />
+          </form>
+        <% } else { %>
+          <p>引き渡し済みの注文です</p>
+        <% } %>
+      </aside>
+    </section>
+      <% }) %>
+  </main>
+</body>

@@ -1,7 +1,7 @@
 export default async function orderRoutes(server, options) {
-  const client = await server.pg.connect();
 
   const order = async (fullname, tel, receiveTime, user_id) => {
+    const client = await server.pg.connect();
     const { rows } = await client.query(
       "INSERT INTO orders (customer_name, customer_tel, customer_receive_time, user_id) VALUES ($1, $2, $3, $4) RETURNING id",
       [fullname, tel, receiveTime, user_id]
@@ -23,6 +23,8 @@ export default async function orderRoutes(server, options) {
    * ]
    */
   const getOrderedItems = async (orderedItems) => {
+    const client = await server.pg.connect();
+
     // https://stackoverflow.com/questions/10720420/node-postgres-how-to-execute-where-col-in-dynamic-value-list-query
     const itemIds = Object.keys(orderedItems);
     const { rows } = await client.query(
@@ -40,6 +42,8 @@ export default async function orderRoutes(server, options) {
   };
 
   const getOrdersByUserId = async (user_id) => {
+    const client = await server.pg.connect();
+
     const { rows } = await client.query(
       `SELECT
         orders.id order_id,
@@ -47,7 +51,8 @@ export default async function orderRoutes(server, options) {
         items.price price,
         order_items.quantity quantity,
         orders.created_at created_at,
-        orders.customer_receive_time customer_receive_time
+        orders.customer_receive_time customer_receive_time,
+        orders.done
       FROM
         orders,
         items,
@@ -91,6 +96,7 @@ export default async function orderRoutes(server, options) {
           order_id: item.order_id,
           created_at: item.created_at,
           customer_receive_time: item.customer_receive_time,
+          done: item.done,
           items: [item],
         });
       }
@@ -99,6 +105,7 @@ export default async function orderRoutes(server, options) {
   };
 
   const getOrders = async () => {
+    const client = await server.pg.connect();
     const { rows } = await client.query(
       `SELECT
         orders.id order_id,
@@ -109,7 +116,8 @@ export default async function orderRoutes(server, options) {
         orders.customer_receive_time customer_receive_time,
         orders.customer_name,
         orders.customer_tel,
-        orders.customer_receive_time
+        orders.customer_receive_time,
+        orders.done
       FROM
         orders,
         items,
@@ -153,12 +161,19 @@ export default async function orderRoutes(server, options) {
           customer_tel: item.customer_tel,
           created_at: item.created_at,
           customer_receive_time: item.customer_receive_time,
+          done: item.done,
           items: [item],
         });
       }
       return orders;
     }, []);
   };
+
+  const recieveOrder = async (orderId) => {
+    const client = await server.pg.connect();
+    await client.query("UPDATE orders SET done=true WHERE id= $1", [orderId])
+    client.release();
+  }
 
   server.get("/order", async (request, reply) => {
     const items = request.session.items;
@@ -170,6 +185,7 @@ export default async function orderRoutes(server, options) {
     });
   });
 
+
   server.post("/order", async (request, reply) => {
     const items = request.session.items;
     const { fullname, tel, receiveTime } = request.body;
@@ -178,6 +194,7 @@ export default async function orderRoutes(server, options) {
     const itemIds = Object.keys(items);
     const orderedItems = await getOrderedItems(itemIds);
 
+    const client = await server.pg.connect();
     for (const itemId in items) {
       const quantity = Number(items[itemId]);
       await client.query(
@@ -185,6 +202,7 @@ export default async function orderRoutes(server, options) {
         [orderId, Number(itemId), quantity]
       );
     }
+    client.release()
 
     // flush items in session
     request.session.items = {};
@@ -201,6 +219,7 @@ export default async function orderRoutes(server, options) {
   });
 
   server.get('/order/history', async (request, reply) => {
+    const client = await server.pg.connect();
     const { user_id } = request.query
 
     // if user id is not matched with the current user and the user is not admin, it will redirect to the order
@@ -212,6 +231,7 @@ export default async function orderRoutes(server, options) {
     if (rows.length === 0) {
       return reply.redirect(302, '/order')
     }
+    client.release()
 
     const orders = await getOrdersByUserId(user_id)
 
@@ -225,6 +245,17 @@ export default async function orderRoutes(server, options) {
     }
     const orders = await getOrders();
     return reply.view("src/views/orderManage.ejs", { orders });
+  })
+
+  server.post('/order/:order_id/receive', async(request, reply) => {
+    const { order_id } = request.params
+    if (!request.user.isAdmin) {
+      return reply.redirect(302, '/order')
+    }
+
+    await recieveOrder(order_id);
+
+    return reply.redirect("/order/manage")
   })
 }
 

@@ -3,28 +3,34 @@
 <% orders.forEach(order => { %>
 <body>
     <section>
-      <h2> 注文番号 <%= order.order_id %> </h2>
-      <p>注文日 <%= order.created_at %></p>
-      <p>受け取り予定時間 <%= order.customer_receive_time %></p>
+      <aside>
 
-      <table>
-        <thead>
-          <th>商品名</th>
-          <th>価格</th>
-          <th>数量</th>
-        </thead>
-        <tbody>
-          <% order.items.forEach(item => { %>
+        <h2> 注文番号 <%= order.order_id %> </h2>
+        <p>注文日 <%= order.created_at %></p>
+        <p>受け取り予定時間 <%= order.customer_receive_time %></p>
 
-            <tr>
-              <td><%= item.name %></td>
-              <td><%= item.price %></td>
-              <td><%= item.quantity %></td>
-            </tr>
+        <table>
+          <thead>
+            <th>商品名</th>
+            <th>価格</th>
+            <th>数量</th>
+          </thead>
+          <tbody>
+            <% order.items.forEach(item => { %>
 
-            <% }) %>
-        </tbody>
-      </table>
+              <tr>
+                <td><%= item.name %></td>
+                <td><%= item.price %></td>
+                <td><%= item.quantity %></td>
+              </tr>
+
+              <% }) %>
+          </tbody>
+        </table>
+        <% if (order.done) {%>
+          <p>引き渡し済みの注文です</p>
+        <% } %>
+      </aside>
     </section>
 
   <% }) %>
