@@ -1,18 +1,5 @@
 <%- include('layouts/header', {title: '商品一覧'}) %>
 <body>
-  <p>
-    <% if (locals.user) { %>
-      <span><a href="/users/<%= user.id%>/edit"><%= user.username %></a> さん こんにちは</span>
-      <a href="/order/history?user_id=<%= user.id %>">注文履歴を見る</a>
-      <a href="/logout">ログアウト</a>
-    <% } else { %>
-      <span>ログインしていません。</span><a href="/login">ログインする</a><a href="/signup">新規登録</a>
-    <% } %>
-    <% if (user?.isAdmin) { %>
-      <a href="/order/manage">注文を管理する</a>
-    <% } %>
-      <a href="/order">カートを見る</a>
-  </p>
   <table>
     <thead>
       <th>商品名</th>
@@ -26,5 +13,4 @@
       <% }) %>
     </tbody>
   </table>
-</body>
-</html>
+<%- include('layouts/footer.ejs') %>

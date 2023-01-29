@@ -1,5 +1,4 @@
 <%- include('layouts/header', {title: 'ログイン'}) %>
-<body>
   <h2>ログイン</h2>
   <form method="POST" action="/login">
     <label for="username">ユーザー名</label>
@@ -9,4 +8,4 @@
     <input type="submit" value="ログイン"/>
   </form>
   <a href="/items">商品一覧に戻る</a>
-</body>
+<%- include('layouts/footer.ejs') %>

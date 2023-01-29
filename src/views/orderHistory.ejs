@@ -1,7 +1,6 @@
 <%- include('layouts/header', {title: '注文履歴'}) %>
 
 <% orders.forEach(order => { %>
-<body>
     <section>
       <aside>
 
@@ -34,4 +33,5 @@
     </section>
 
   <% }) %>
-</body>
+<%- include('layouts/footer.ejs') %>
+

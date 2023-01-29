@@ -1,0 +1,26 @@
+  <nav>
+    <% if (locals.user) { %>
+      <ul>
+        <li><a href="/users/<%= user.id%>/edit"><%= user.username %></a> さん こんにちは</li>
+        <li><a href="/logout">ログアウト</a></li>
+        <li><a href="/order/history?user_id=<%= user.id %>">注文履歴を見る</a></li>
+      </ul>
+    <% } else { %>
+      <ul>
+        <li><span>ログインしていません。</span><a href="/login">ログインする</a></li>
+        <li><a href="/signup">新規登録</a></li>
+      </ul>
+    <% } %>
+    <% if (user?.isAdmin) { %>
+      <ul>
+        <li>
+          <a href="/order/manage">注文を管理する</a>
+        </li>
+      </ul>
+    <% } %>
+      <ul>
+        <li>
+          <a href="/order">カートを見る</a>
+        </li>
+      </ul>
+  </nav>

@@ -1,5 +1,4 @@
 <%- include('layouts/header', {title: 'ご注文が完了しました'}) %>
-<body>
   <h2>注文内容</h2>
   <ul>
     <% orderedItems.forEach(orderedItem => { %>
@@ -9,5 +8,4 @@
     <% }) %>
   </ul>
   <span>お支払い予定額: <%= totalPrice %>円</span>
-</body>
-</html>
+<%- include('layouts/footer.ejs') %>

@@ -1,5 +1,4 @@
 <%- include('layouts/header', {title: 'ユーザー登録'}) %>
-<body>
   <h2>ユーザー登録</h2>
   <form method="POST" action="/signup">
     <label for="username">ユーザー名</label>
@@ -9,4 +8,5 @@
     <input type="submit" value="登録"/>
   </form>
   <p><%= locals.errorMessage || '' %></p>
-</body>
+<%- include('layouts/footer.ejs') %>
+

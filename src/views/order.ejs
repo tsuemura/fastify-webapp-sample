@@ -1,5 +1,4 @@
 <%- include('layouts/header', {title: '注文する'}) %>
-<body>
   <% if (!items) { %>
     <%= "カートが空です" %>
   <% } else { %>
@@ -30,5 +29,4 @@
     </form>
   <% } /* end of if block */%>
   <a href="/items"">他の商品を追加する</a>
-</body>
-</html>
+<%- include('layouts/footer.ejs') %>
