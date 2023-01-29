@@ -1,0 +1,9 @@
+body {
+  margin: 1rem;
+}
+
+form.no-border {
+  border: 0px;
+  box-shadow: none;
+  padding: 0px;
+}
