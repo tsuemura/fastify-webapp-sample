@@ -11,16 +11,36 @@ export default async function itemRoutes(server, options) {
           items.name,
           items.description,
           items.price,
-          uf.id as favorite
+          uf.id as favorite,
+          CASE
+            WHEN inventories.inventory IS NULL AND items.default_inventory IS NULL THEN null
+            WHEN inventories.inventory IS NULL AND items.default_inventory IS NOT NULL THEN items.default_inventory
+            WHEN inventories.inventory IS NOT NULL THEN inventories.inventory
+          END as inventory
         FROM
           items
-          LEFT JOIN ( SELECT * FROM users_favorites WHERE user_id = $1 ) uf ON uf.item_id = items.id`,
+          LEFT JOIN ( SELECT * FROM users_favorites WHERE user_id = $1 ) uf ON uf.item_id = items.id
+          LEFT JOIN inventories ON inventories.item_id = items.id`,
+
         [request.user.id]
       );
     } else {
       result = await client.query(
-        "SELECT items.id, items.name, items.description, items.price FROM items"
-      )
+        `SELECT
+          items.id,
+          items.name,
+          items.description,
+          items.price,
+          CASE
+            WHEN inventories.inventory IS NULL AND items.default_inventory IS NULL THEN null
+            WHEN inventories.inventory IS NULL AND items.default_inventory IS NOT NULL THEN items.default_inventory
+            WHEN inventories.inventory IS NOT NULL THEN inventories.inventory
+          END as inventory
+        FROM
+          items
+          LEFT JOIN inventories ON inventories.item_id = items.id
+        `
+      );
     }
 
     client.release()
@@ -106,7 +126,7 @@ export default async function itemRoutes(server, options) {
       const client = await server.pg.connect();
       const { itemId } = request.params;
       const { rows } = await client.query(
-        "SELECT id, name, description, price FROM items WHERE id = $1",
+        "SELECT id, name, description, price, default_inventory FROM items WHERE id = $1",
         [itemId]
       );
       const item = rows[0];
@@ -131,10 +151,10 @@ export default async function itemRoutes(server, options) {
     async (request, reply) => {
       const client = await server.pg.connect();
       const { itemId } = request.params;
-      const { name, description, price } = request.body;
+      const { name, description, price, default_inventory } = request.body;
       const { rows } = await client.query(
-        "UPDATE items SET name = $2, description = $3, price = $4, updated_at = CURRENT_DATE WHERE id = $1 RETURNING id, name, description, price",
-        [itemId, name, description, price]
+        "UPDATE items SET name = $2, description = $3, price = $4, default_inventory = $5, updated_at = CURRENT_DATE WHERE id = $1 RETURNING id, name, description, price, default_inventory",
+        [itemId, name, description, price, default_inventory]
       );
       const item = rows[0];
       client.release()

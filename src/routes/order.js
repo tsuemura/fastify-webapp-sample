@@ -1,12 +1,10 @@
 export default async function orderRoutes(server, options) {
 
-  const order = async (fullname, tel, receiveTime, user_id) => {
-    const client = await server.pg.connect();
+  const order = async (client, fullname, tel, receiveTime, user_id) => {
     const { rows } = await client.query(
       "INSERT INTO orders (customer_name, customer_tel, customer_receive_time, user_id) VALUES ($1, $2, $3, $4) RETURNING id",
       [fullname, tel, receiveTime, user_id]
     );
-    client.release()
     return rows[0].id;
   };
 
@@ -22,13 +20,11 @@ export default async function orderRoutes(server, options) {
    *   }
    * ]
    */
-  const getOrderedItems = async (orderedItems) => {
-    const client = await server.pg.connect();
-
+  const getOrderedItems = async (client, orderedItems) => {
     // https://stackoverflow.com/questions/10720420/node-postgres-how-to-execute-where-col-in-dynamic-value-list-query
     const itemIds = Object.keys(orderedItems);
     const { rows } = await client.query(
-      "SELECT id, name, price FROM items WHERE id = ANY($1::int[])",
+      "SELECT id, name, price, default_inventory FROM items WHERE id = ANY($1::int[])",
       [itemIds]
     );
 
@@ -38,6 +34,7 @@ export default async function orderRoutes(server, options) {
       name: row.name,
       quantity: orderedItems[row.id],
       price: row.price,
+      default_inventory: row.default_inventory
     }));
   };
 
@@ -177,7 +174,9 @@ export default async function orderRoutes(server, options) {
 
   server.get("/order", async (request, reply) => {
     const items = request.session.items;
-    const orderedItems = items ? await getOrderedItems(items) : undefined
+    const client = await server.pg.connect()
+    const orderedItems = items ? await getOrderedItems(client, items) : undefined
+    client.release()
 
     await reply.view("/src/views/order.ejs", {
       items: orderedItems,
@@ -188,20 +187,51 @@ export default async function orderRoutes(server, options) {
 
   server.post("/order", async (request, reply) => {
     const items = request.session.items;
-    const { fullname, tel, receiveTime } = request.body;
-    const orderId = await order(fullname, tel, receiveTime, request?.user?.id);
-
-    const itemIds = Object.keys(items);
-    const orderedItems = await getOrderedItems(itemIds);
+    const { fullname, tel, receiveTime, orderDate } = request.body;
 
     const client = await server.pg.connect();
+
+    // begin transaction
+    await client.query('BEGIN');
+    await client.query('LOCK TABLE orders, inventories')
+
+    const orderId = await order(client, fullname, tel, receiveTime, request?.user?.id);
+    const orderedItems = await getOrderedItems(client, items);
+
     for (const itemId in items) {
       const quantity = Number(items[itemId]);
+
+      const item = orderedItems.find(i => i.id == itemId)
+
+
+      // Create new order
       await client.query(
         "INSERT INTO order_items (order_id, item_id, quantity) VALUES ($1, $2, $3)",
         [orderId, Number(itemId), quantity]
       );
+
+      // Check the default inventory of the item
+      // If the default inventory is null then it can be ordered anyways
+      if (item.default_inventory === null) {
+        continue;
+      }
+
+      // Only when no inventory item in the inventories table it creates a record. Otherwise, it update the inventory
+      let { rows } = await client.query(
+        "INSERT INTO inventories (item_id, inventory, order_date) VALUES ($1, $2, $3) ON CONFLICT (item_id, order_date) DO UPDATE SET inventory = inventories.inventory - $4 RETURNING inventories.inventory", [Number(itemId), Number(item.default_inventory) - quantity, orderDate, quantity]
+      )
+
+      // If the updated inventory is less than 0, store can't sell it. Rollback
+      const inventory = rows[0].inventory
+
+        if (inventory < 0) {
+        await client.query('ROLLBACK')
+        return await reply.send(`商品 ${itemId} の在庫が足りませんでした`)
+      }
+
     }
+    await client.query('COMMIT')
+
     client.release()
 
     // flush items in session

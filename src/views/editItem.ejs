@@ -5,10 +5,10 @@
     <p>
       <span>商品が編集されました</span>
       <ul>
-        <li><%= item.id %></li>
         <li><%= item.name %></li>
         <li><%= item.description %></li>
         <li><%= item.price %></li>
+        <li><%= item.default_inventory %></li>
       </ul>
     </p>
   <% } %>
@@ -20,6 +20,8 @@
     <input id="description" name="description" value="<%= item.description %>" />
     <label for="price">価格</label>
     <input id="price" name="price" value="<%= item.price %>" />
-    <input type="submit" value="編集"/>
+    <label for="price">デフォルトの注文可能数（空欄の場合は無制限に注文可能です）</label>
+    <input id="price" name="default_inventory" value="<%= item.default_inventory %>" />
+    <input type="submit" value="変更"/>
   </form>
 </body>
