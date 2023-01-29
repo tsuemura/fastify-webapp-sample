@@ -1,17 +1,23 @@
 <%- include('layouts/header', {title: '注文する'}) %>
-  <% if (!items) { %>
-    <%= "カートが空です" %>
-  <% } else { %>
+  <header>
     <h2> カートの中の商品 </h2>
-    <table>
-      <thead>
-        <th>商品名</th>
-        <th>数量</th>
-        <th>金額（合計）</th>
-      </thead>
-      <tbody>
-        <% items.forEach(item => { %>
-          <%- include('orderItem.ejs', {item}) %>
+  </header>
+  <article>
+    <% if (!items || items.length === 0) { %>
+      <aside>
+        <%= "カートが空です" %>
+      </aside>
+    <% } else { %>
+      <table>
+        <thead>
+          <th>商品名</th>
+          <th>数量</th>
+          <th>金額（合計）</th>
+          <th></th>
+        </thead>
+        <tbody>
+          <% items.forEach(item => { %>
+        <%- include('orderItem.ejs', {item}) %>
         <% } ) %>
       </tbody>
     </table>
@@ -27,6 +33,9 @@
       <input id="receiveTime" name="receiveTime" type="time"/>
       <input type="submit" value="注文を確定する"/>
     </form>
-  <% } /* end of if block */%>
-  <a href="/items"">他の商品を追加する</a>
-<%- include('layouts/footer.ejs') %>
+    <% } /* end of if block */%>
+
+    <a href="/items"">他の商品を追加する</a>
+    <%- include('layouts/footer.ejs') %>
+
+  </article>
