@@ -126,7 +126,7 @@ export default async function itemRoutes(server, options) {
       const client = await server.pg.connect();
       const { itemId } = request.params;
       const { rows } = await client.query(
-        "SELECT id, name, description, price, default_inventory FROM items WHERE id = $1",
+        "SELECT items.id, items.name, items.description, items.price, items.default_inventory, inventories.inventory FROM items LEFT JOIN inventories ON items.id = inventories.item_id AND inventories.order_date = CURRENT_DATE WHERE items.id = $1",
         [itemId]
       );
       const item = rows[0];
@@ -151,12 +151,19 @@ export default async function itemRoutes(server, options) {
     async (request, reply) => {
       const client = await server.pg.connect();
       const { itemId } = request.params;
-      const { name, description, price, default_inventory } = request.body;
-      const { rows } = await client.query(
+      const { name, description, price, default_inventory, inventory } = request.body;
+      const item = (await client.query(
         "UPDATE items SET name = $2, description = $3, price = $4, default_inventory = $5, updated_at = CURRENT_DATE WHERE id = $1 RETURNING id, name, description, price, default_inventory",
         [itemId, name, description, price, default_inventory]
-      );
-      const item = rows[0];
+      )).rows[0]
+
+      if (inventory) {
+        item.inventory = (await client.query(
+          `INSERT INTO inventories (item_id, inventory, order_date) VALUES ($1, $2, CURRENT_DATE) ON CONFLICT(item_id, order_date) DO UPDATE SET inventory = $2 RETURNING inventory`,
+          [itemId, inventory]
+        )).rows[0].inventory
+      }
+
       client.release()
       await reply.view("/src/views/editItem.ejs", { item, modified: true });
     }
