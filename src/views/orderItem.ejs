@@ -2,7 +2,8 @@
   <td><%= item.name %></td>
   <td>
     <form class="no-border" method="POST" action="/order/update-item">
-      <input type="number" name="<%= `${item.id}-quantity` %>" %> value="<%= item.quantity %>" style="width: 3em" />
+      <input type="hidden" name="item_id" value="<%= item.id %>" />
+      <input type="number" name="quantity" %> value="<%= item.quantity %>" style="width: 3em" />
       <input type="submit" value="数量を変更"/>
     </form>
   </td>

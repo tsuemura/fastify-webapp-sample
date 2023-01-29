@@ -288,11 +288,19 @@ export default async function orderRoutes(server, options) {
     return reply.redirect("/order/manage")
   })
 
-  server.get("/order/delete-item", (request, reply) => {
-    const { item_id } = request.query
+  server.post("/order/delete-item", (request, reply) => {
+    const { item_id } = request.body
     if (item_id) {
       console.log(`removing item ${item_id} from session...`)
       delete request.session.items[item_id]
+    }
+    return reply.redirect(302, "/order")
+  })
+
+  server.post("/order/update-item", (request, reply) => {
+    const { item_id, quantity } = request.body
+    if (item_id) {
+      request.session.items[item_id] = quantity
     }
     return reply.redirect(302, "/order")
   })
