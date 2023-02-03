@@ -11,7 +11,7 @@
         <li><a href="/signup">新規登録</a></li>
       </ul>
     <% } %>
-    <% if (user?.isAdmin) { %>
+    <% if (locals.user && user.isAdmin) { %>
       <ul>
         <li>
           <a href="/order/manage">注文を管理する</a>

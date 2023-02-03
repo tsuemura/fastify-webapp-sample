@@ -245,6 +245,7 @@ export default async function orderRoutes(server, options) {
     await reply.view("/src/views/orderComplete.ejs", {
       orderedItems,
       totalPrice,
+      user: request.user,
     });
   });
 
@@ -265,7 +266,10 @@ export default async function orderRoutes(server, options) {
 
     const orders = await getOrdersByUserId(user_id)
 
-    await reply.view('src/views/orderHistory.ejs', {orders})
+    await reply.view("src/views/orderHistory.ejs", {
+      orders,
+      user: request.user,
+    });
   })
 
   server.get('/order/manage', async (request, reply) => {
@@ -274,7 +278,10 @@ export default async function orderRoutes(server, options) {
       return reply.redirect(302, '/order')
     }
     const orders = await getOrders();
-    return reply.view("src/views/orderManage.ejs", { orders });
+    return reply.view("src/views/orderManage.ejs", {
+      orders,
+      user: request.user,
+    });
   })
 
   server.post('/order/:order_id/receive', async(request, reply) => {

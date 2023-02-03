@@ -80,7 +80,9 @@ export default async function itemRoutes(server, options) {
       ),
     },
     async (request, reply) => {
-      await reply.view("/src/views/addItem.ejs");
+      await reply.view("/src/views/addItem.ejs", {
+        user: request.user,
+      });
     }
   );
 
@@ -105,7 +107,10 @@ export default async function itemRoutes(server, options) {
         [name, description, price]
       );
       client.release()
-      await reply.view("/src/views/addItem.ejs", { item: rows[0] });
+      await reply.view("/src/views/addItem.ejs", {
+        item: rows[0],
+        user: request.user,
+      });
     }
   );
 
@@ -131,7 +136,11 @@ export default async function itemRoutes(server, options) {
       );
       const item = rows[0];
       client.release()
-      await reply.view("/src/views/editItem.ejs", { item, modified: false });
+      await reply.view("/src/views/editItem.ejs", {
+        item,
+        modified: false,
+        user: request.user,
+      });
     }
   );
 
@@ -165,7 +174,11 @@ export default async function itemRoutes(server, options) {
       }
 
       client.release()
-      await reply.view("/src/views/editItem.ejs", { item, modified: true });
+      await reply.view("/src/views/editItem.ejs", {
+        item,
+        modified: true,
+        user: request.user,
+      });
     }
   );
 
