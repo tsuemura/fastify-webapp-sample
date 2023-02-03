@@ -1,5 +1,8 @@
 <%- include('layouts/header', {title: '注文履歴'}) %>
 
+<% if (orders.length === 0) { %>
+  まだ注文はありません。 <a href="/items">注文してみましょう</a>
+<% } %>
 <% orders.forEach(order => { %>
     <section>
       <aside>
