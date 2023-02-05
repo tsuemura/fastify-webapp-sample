@@ -3,7 +3,7 @@
 [Fastify](https://www.fastify.io/) を使って作ったWebアプリケーションのサンプルです。
 お弁当注文アプリを模して作られています。
 
-## 開発
+## ローカル環境で起動する
 
 ### 事前準備
 
@@ -80,4 +80,36 @@ $ npm run dev
 
 次のURLからアプリケーションを開けます。
 http://127.0.0.1:8080
+
+## リモート環境にデプロイする
+
+### 事前準備: fork または import
+
+事前準備として、このリポジトリを fork する、または import する必要があります。いずれも、このリポジトリを、あなたのアカウントにコピーするための機能です。
+
+- fork: このリポジトリとの関連を保ったまま、分岐した別のリポジトリとして管理する。Publicのみ。
+- import: このリポジトリのコピーを作成する。Privateにもできる。
+
+forkもimportも出来ることに大きな差は無いのですか、forkはこのリポジトリから分岐したものとして扱われ、importは全く別のコピーを作成する機能です。重要な違いとして、 import はコピーしたリポジトリを private 、つまり非公開に設定できるのに対し、 fork は public 、つまり公開設定にしか出来ません。特にあなたがGitの操作に慣れていない場合などは、リポジトリが public になっていることによって、誤ってパスワードやアクセストークンなどの重要な情報をインターネット上に公開してしまうかもしれません。初めて Git や GitHub を使う場合などは、 import を使って新たな private リポジトリを作ったほうが良いでしょう。
+
+fork および import の詳細な方法は以下に記載されています。
+
+Fork: https://docs.github.com/ja/get-started/quickstart/fork-a-repo
+Import: https://docs.github.com/ja/get-started/importing-your-projects-to-github/importing-source-code-to-github/importing-a-repository-with-github-importer
+
+### Railway にデプロイする
+
+[Railway](https://railway.app/) はPostgreSQLなどのデータベースバックエンドを含むインフラストラクチャを簡単にデプロイするためのサービスです。2023年2月現在、無料の Starter Plan でも毎月 $5 の無料枠が付与されているため、練習用など、お試しでデプロイしてみたい場合などにも便利です。
+
+サイトトップの "Start New Project" から、リポジトリの選択に進みます。
+
+![トップ画面](images/RailWay-Top.png)
+
+![Deploy from GitHub repo を選択](images/Railway-SelectRepor.png)
+
+![GitHubにログイン](images/Deploy-From-GitHub.png)
+
+![リポジトリを選択する](images/Select-your-repo.png)
+
+![Deploy Now](images/Deploy%20Now.png)
 
