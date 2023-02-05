@@ -7,7 +7,7 @@
   "scripts": {
     "db:migrate": "node db/migrate.mjs",
     "dev": "docker compose up -d && nodemon src/index.js",
-    "build": "npm db:migrate",
+    "build": "npm run db:migrate",
     "start": "node src/index.js"
   },
   "repository": {
