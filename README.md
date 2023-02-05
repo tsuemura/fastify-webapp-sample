@@ -73,13 +73,37 @@ See 'docker run --help'.
 $ npm i
 ```
 
-次に、開発用サーバーを起動します。
+次に、アプリの起動に必要な情報を生成します。 `env.example` というファイルにサンプルを用意してあるので、これをそのままコピーしてしまいましょう。
+
 ```bash
-$ npm run dev
+$ cp env.example env
 ```
 
-次のURLからアプリケーションを開けます。
-http://127.0.0.1:8080
+次に、開発用サーバーを起動します。このときにデータベースなどのバックエンドも一緒に起動されます。
+```bash
+$ npm run dev
+
+> fastify-react-sample@1.0.0 dev
+> docker compose up -d && nodemon src/index.js
+
+[+] Running 1/0
+ ⠿ Container fastify-react-sample-db-1  Running       0.0s
+[nodemon] 2.0.20
+[nodemon] to restart at any time, enter `rs`
+[nodemon] watching path(s): src/**/*
+[nodemon] watching extensions: ts,mjs,ejs,js,json,graphql
+[nodemon] starting `node src/index.js`
+
+Server listening at http://0.0.0.0:8080
+```
+
+最後に、データベースのマイグレーションを行います。マイグレーションとは、データベースのテーブル作成などのセットアップ作業のことを指します。別のターミナルをもう一つ起動して、以下のコマンドを実行しましょう。
+
+```bash
+$ npm run db:migrate
+```
+
+これで準備完了です。先ほどのターミナルに出力されていた、 `http://0.0.0.0:8080` というページにアクセスしてみましょう。
 
 ## リモート環境にデプロイする
 
@@ -101,6 +125,8 @@ Import: https://docs.github.com/ja/get-started/importing-your-projects-to-github
 
 [Railway](https://railway.app/) はPostgreSQLなどのデータベースバックエンドを含むインフラストラクチャを簡単にデプロイするためのサービスです。2023年2月現在、無料の Starter Plan でも毎月 $5 の無料枠が付与されているため、練習用など、お試しでデプロイしてみたい場合などにも便利です。
 
+#### 新しいプロジェクトをセットアップする
+
 サイトトップの "Start New Project" から、リポジトリの選択に進みます。
 
 ![トップ画面](images/RailWay-Top.png)
@@ -113,3 +139,36 @@ Import: https://docs.github.com/ja/get-started/importing-your-projects-to-github
 
 ![Deploy Now](images/Deploy%20Now.png)
 
+これで、新しいプロジェクトにWebアプリがデプロイされました。しかし、この時点ではまだ必要な情報が入っていませんし、データベースも作成されていませんので、ビルドはクラッシュしています。
+
+#### データベースを設定する
+
+続いてデータベースの設定に移ります。プロジェクトのトップページからPostgreSQLデータベースを作成します。
+
+![Add database](images/Add%20database.png)
+
+プロジェクトにWebアプリと PostgreSQL データベースがセットアップされました。
+
+![Database and web app has been deployed](images/Database%20and%20web%20app%20has%20been%20deployed.png)
+
+#### 環境変数を設定する
+
+次に、アプリを動かすために必要な環境変数をセットアップしましょう。 Railway はデフォルトでデータベースへの接続に関するものなどいくつかの環境変数を自動で設定してくれますが、 session secret と呼ばれるセッションの暗号化のためのキーは自分で設定しなければいけません。
+
+![Set session secret](images/Set%20session%20secret.png)
+
+ここには任意の値をセットしましょう。どこかからコピーしてきた値ではなく、必ず **あなた自身がランダムに生成したもの** を使ってください。ランダムな値は以下のようなコマンドで生成できます。
+
+```bash
+$ openssl rand -hex 32
+```
+
+#### ドメインを設定する
+
+最後に、アプリを確認するためのドメインを設定しましょう。Railwayはサブドメインを無料で用意してくれます。
+
+![Setting domain](images/Setting%20domain.png)
+
+準備が整ったら、ドメインにアクセスしてみましょう。このようなサイトが表示されたら完了です。
+
+![You app has been deployed!](images/You%20app%20has%20been%20deployed!.png)
