@@ -7,7 +7,6 @@ export default async function publicRoutes(server) {
   });
 
   server.get("/css/base.css", async (request, reply) => {
-    console.log(path.join(process.cwd(), "/src/public"));
     return reply.sendFile('base.css')
   });
 }

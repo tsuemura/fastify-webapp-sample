@@ -172,6 +172,13 @@ export default async function orderRoutes(server, options) {
     client.release();
   }
 
+  const validate = (params, targets) => {
+    return targets.reduce((carry, target) => {
+      if (!params[target]) carry.push(target)
+      return carry
+    }, [])
+  }
+
   server.get("/order", async (request, reply) => {
     const items = request.session.items;
     const client = await server.pg.connect()
@@ -181,6 +188,7 @@ export default async function orderRoutes(server, options) {
     await reply.view("/src/views/order.ejs", {
       items: orderedItems,
       user: request.user,
+      query: request.query,
     });
   });
 
@@ -188,6 +196,19 @@ export default async function orderRoutes(server, options) {
   server.post("/order", async (request, reply) => {
     const items = request.session.items;
     const { fullname, tel, receiveTime, orderDate } = request.body;
+
+    const validationTarget = [
+      'fullname',
+      'tel',
+      'receiveTime',
+      'orderDate',
+    ]
+
+    const missing = validate(request.body, validationTarget)
+
+    if (missing.length !== 0) {
+      return await reply.redirect(302, `order?missing=${missing}&fullname=${fullname}&tel=${tel}&receiveTime=${receiveTime}&orderDate=${orderDate}`)
+    }
 
     const client = await server.pg.connect();
 
@@ -298,7 +319,6 @@ export default async function orderRoutes(server, options) {
   server.post("/order/delete-item", (request, reply) => {
     const { item_id } = request.body
     if (item_id) {
-      console.log(`removing item ${item_id} from session...`)
       delete request.session.items[item_id]
     }
     return reply.redirect(302, "/order")
