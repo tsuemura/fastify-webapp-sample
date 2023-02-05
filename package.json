@@ -7,9 +7,7 @@
   "scripts": {
     "db:migrate": "node db/migrate.mjs",
     "dev": "docker compose up -d && nodemon src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rm -rf build && esbuild `find src \\( -name '*.ts' \\)` --platform=node --outdir=build --bundle",
-    "start": "npm run build && node build/index.js"
+    "start": "node src/index.js"
   },
   "repository": {
     "type": "git",
