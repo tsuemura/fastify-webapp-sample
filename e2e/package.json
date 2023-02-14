@@ -1,0 +1,19 @@
+{
+  "name": "e2e",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "codeceptjs run --steps"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "codeceptjs": "^3.3.7",
+    "playwright": "^1.30.0"
+  },
+  "devDependencies": {
+    "dotenv": "^16.0.3"
+  }
+}
