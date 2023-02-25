@@ -5,6 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "prepare": "husky install",
     "db:migrate": "node db/migrate.mjs",
     "dev": "docker compose up -d && nodemon src/index.js",
     "build": "npm run db:migrate",
@@ -44,6 +45,7 @@
     "@types/ejs": "^3.1.1",
     "@types/node": "^18.11.18",
     "esbuild": "^0.16.12",
+    "husky": "^8.0.3",
     "nodemon": "^2.0.20",
     "postgrator-cli": "^6.0.0",
     "start-server-and-test": "^1.15.4",
