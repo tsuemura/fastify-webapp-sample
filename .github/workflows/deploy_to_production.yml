@@ -1,9 +1,11 @@
-name: Deploy to Staging
+name: Deploy to Production
 
 on:
-  push:
-    branches:
-      - main
+  workflow_run:
+    workflows:
+      - "Run E2E test"
+    types:
+      - completed
 
 jobs:
   deploy:
@@ -22,11 +24,11 @@ jobs:
         run: npm i -g @railway/cli
 
       - name: Link to the environment
-        run: railway environment staging
+        run: railway environment production
         env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_STAGING_TOKEN }}
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_PRODUCTION_TOKEN }}
 
       - name: Deploy
         run: railway up
         env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_STAGING_TOKEN }}
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_PRODUCTION_TOKEN }}

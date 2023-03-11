@@ -1,0 +1,35 @@
+name: Run E2E test
+
+on:
+  workflow_run:
+    workflows:
+      - "Deploy to Staging"
+    types:
+      - completed
+
+jobs:
+  run-e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Use Node 16
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16.x
+
+      - name: Install Playwright dependencies
+        run: npx playwright install-deps
+        working-directory: ./e2e
+
+      - name: Setup E2E test
+        run: npm ci
+        working-directory: ./e2e
+
+      - name: Run E2E test
+        run: npm run test
+        working-directory: ./e2e
+        env:
+          BASE_URL: 'https://fastify-webapp-sample-clone-staging.up.railway.app'
+          HEADLESS: true
