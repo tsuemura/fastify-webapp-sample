@@ -31,8 +31,8 @@
       <input reqyured id="fullname" name="fullname" value="<%= query.fullname ? query.fullname : user?.fullname %>" />
       <label for="tel">電話番号（連絡時に必要です）</label>
       <input required id="tel" type="tel" name="tel" value="<%= query.tel ? query.tel : user?.tel %>"/>
-      <label for="receiveTime">受け取り日</label>
-      <input required id="receiveTime" name="orderDate" type="date" value="<%= query.orderDate %>"/>
+      <label for="orderDate">受け取り日</label>
+      <input required id="orderDate" name="orderDate" type="date" value="<%= query.orderDate %>"/>
       <label for="receiveTime">受け取り目安時間</label>
       <input required id="receiveTime" name="receiveTime" type="time" value="<%= query.receiveTime%>"/>
       <input type="submit" value="注文を確定する"/>
