@@ -7,7 +7,7 @@
     <% orders.forEach(order => { %>
       <section>
         <aside>
-          <h3> 注文番号 <%= order.order_id %> </h3>
+          <h3> 注文番号: <%= order.order_id %> </h3>
           <ul>
             <li><%= order.customer_name %> 様</li>
             <li>注文日 <%= order.created_at %></li>
