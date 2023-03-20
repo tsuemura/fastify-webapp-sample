@@ -16,7 +16,7 @@ Scenario('Login and confirm order', async ({ I }) => {
   I.click("カートに入れる")
   I.fillField('お名前（受取時に必要です）', 'ユーザー1')
   I.fillField('電話番号（連絡時に必要です）', '09000000000')
-  I.fillField('受け取り日', '002023/08/01')
+  I.fillField('受け取り日', '2023/08/01')
   I.fillField('受け取り目安時間', '12:00')
   I.click('注文を確定する')
   const orderNo = await I.grabTextFrom('h3')
