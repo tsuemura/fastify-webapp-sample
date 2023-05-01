@@ -39,10 +39,9 @@ Scenario('Login and confirm order', async ({ I, date }) => {
 
     // 注文管理画面から注文を引き渡す
     I.click("注文を管理する")
-    within(locate('aside').withText(orderNo), () => {
-      I.click("この注文を引き渡しました")
-      I.see("引き渡し済みの注文です")
-    })
+    const itemContainer = locate('aside').withText(orderNo)
+    I.click("この注文を引き渡しました", itemContainer)
+    I.see("引き渡し済みの注文です", itemContainer)
 
   })
 })
