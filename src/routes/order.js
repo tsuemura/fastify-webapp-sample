@@ -264,6 +264,7 @@ export default async function orderRoutes(server, options) {
     );
 
     await reply.view("/src/views/orderComplete.ejs", {
+      orderId,
       orderedItems,
       totalPrice,
       user: request.user,
