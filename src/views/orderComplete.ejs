@@ -1,6 +1,6 @@
 <%- include('layouts/header', {title: 'ご注文が完了しました'}) %>
   <h2>ご注文が完了しました</h2>
-  <h3>注文番号: <%= orderedItems[0].id %></h3>
+  <h3>注文番号: <%= orderId %></h3>
   <ul>
     <% orderedItems.forEach(orderedItem => { %>
       <li>
