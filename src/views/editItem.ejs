@@ -21,10 +21,10 @@
     <input id="description" name="description" value="<%= item.description %>" />
     <label for="price">価格</label>
     <input id="price" name="price" value="<%= item.price %>" />
-    <label for="price">デフォルトの注文可能数（空欄の場合は無制限に注文可能です）</label>
-    <input id="price" type=number name="default_inventory" value="<%= item.default_inventory %>" />
-    <label for="price">現在の注文可能数（空欄の場合はデフォルトの注文可能数が使われます）</label>
-    <input id="price" type=number name="inventory" value="<%= item.inventory %>" />
+    <label for="default_inventory">デフォルトの注文可能数（空欄の場合は無制限に注文可能です）</label>
+    <input id="default_inventory" type=number name="default_inventory" value="<%= item.default_inventory %>" />
+    <label for="inventory">現在の注文可能数（空欄の場合はデフォルトの注文可能数が使われます）</label>
+    <input id="inventory" type=number name="inventory" value="<%= item.inventory %>" />
     <input type="submit" value="変更"/>
   </form>
 <%- include('layouts/footer.ejs') %>
