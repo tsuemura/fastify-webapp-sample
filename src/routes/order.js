@@ -245,9 +245,14 @@ export default async function orderRoutes(server, options) {
       // If the updated inventory is less than 0, store can't sell it. Rollback
       const inventory = rows[0].inventory
 
-        if (inventory < 0) {
+      if (inventory < 0) {
         await client.query('ROLLBACK')
-        return await reply.send(`商品 ${itemId} の在庫が足りませんでした`)
+        const items = await client.query(
+          "SELECT name FROM items WHERE id = $1",
+          [Number(itemId)]
+        );
+        const itemName = items.rows[0].name
+        return await reply.send(`商品 ${itemName} の在庫が足りませんでした`)
       }
 
     }
