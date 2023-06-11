@@ -2,7 +2,7 @@ Feature("在庫管理");
 
 Scenario(
   "店舗スタッフは、デフォルトの注文可能数を変更できる。ユーザーは、デフォルトの注文可能数まで商品を注文できる。",
-  ({ I, date }) => {
+  ({ I, utils }) => {
     // ## 事前準備: 商品データを作成する。
 
     // 店舗スタッフとしてログインする。
@@ -16,7 +16,7 @@ Scenario(
     // 商品名はタイムスタンプなどからユニークなものを設定する。例えば、`牛ハラミ弁当-テスト-20230416120600` などのようにする。
     // 商品説明と価格はそれぞれ `テスト用の商品です` ・ `500` とする。
     I.click("商品を追加する");
-    const itemName = `牛ハラミ弁当-テスト-${date.now.format("YYYYMMDDHHmmss")}`;
+    const itemName = `牛ハラミ弁当-テスト-${utils.now.format("YYYYMMDDHHmmss")}`;
     I.fillField("商品名", itemName);
     I.fillField("商品説明", "テスト用の商品です");
     I.fillField("価格", "500");
@@ -48,10 +48,10 @@ Scenario(
       I.click("カートを見る");
       I.fillField("お名前（受取時に必要です）", "ユーザー1");
       I.fillField("電話番号（連絡時に必要です）", "09000000000");
-      I.fillField("受け取り日", date.now.format("YYYY/MM/DD"));
+      I.fillField("受け取り日", utils.now.format("YYYY/MM/DD"));
       I.fillField(
         "受け取り目安時間",
-        date.now.add(1, "hour").format("HH:MM:SS")
+        utils.now.add(1, "hour").format("HH:MM:SS")
       );
 
       // 注文を確定する。
@@ -63,7 +63,7 @@ Scenario(
 
 Scenario(
   "店舗スタッフは、デフォルトの注文可能数を変更できる。ユーザーは、デフォルトの注文可能数を越えて注文すると、エラーになる。",
-  ({ I, date }) => {
+  ({ I, utils }) => {
     // ## 事前準備: 商品データを作成する。
 
     // 店舗スタッフとしてログインする。
@@ -77,7 +77,7 @@ Scenario(
     // 商品名はタイムスタンプなどからユニークなものを設定する。例えば、`牛ハラミ弁当-テスト-20230416120600` などのようにする。
     // 商品説明と価格はそれぞれ `テスト用の商品です` ・ `500` とする。
     I.click("商品を追加する");
-    const itemName = `牛ハラミ弁当-テスト-${date.now.format("YYYYMMDDHHmmss")}`;
+    const itemName = `牛ハラミ弁当-テスト-${utils.now.format("YYYYMMDDHHmmss")}`;
     I.fillField("商品名", itemName);
     I.fillField("商品説明", "テスト用の商品です");
     I.fillField("価格", "500");
@@ -114,10 +114,10 @@ Scenario(
       I.click("カートを見る");
       I.fillField("お名前（受取時に必要です）", "ユーザー1");
       I.fillField("電話番号（連絡時に必要です）", "09000000000");
-      I.fillField("受け取り日", date.now.format("YYYY/MM/DD"));
+      I.fillField("受け取り日", utils.now.format("YYYY/MM/DD"));
       I.fillField(
         "受け取り目安時間",
-        date.now.add(1, "hour").format("HH:MM:SS")
+        utils.now.add(1, "hour").format("HH:MM:SS")
       );
 
       // 注文を確定する。
