@@ -46,15 +46,15 @@ Scenario(
   }
 );
 
-Scenario(
+Scenario.only(
   "店舗スタッフは、デフォルトの注文可能数を変更できる。ユーザーは、デフォルトの注文可能数を越えて注文すると、エラーになる。",
   ({ I, utils }) => {
     let itemName
 
     // ## 店舗スタッフはある商品のデフォルトの注文可能数を10個に設定する。
-    I.amAnonimousUser(I => {
+    I.amStoreStaff(I => {
       itemName = I.haveItem()
-      
+
       I.amOnPage("/items");
       I.shouldBeOnItemListPage(() => {
         I.click("商品を編集", I.findItem(itemName));
@@ -71,14 +71,12 @@ Scenario(
     I.amAnonimousUser(() => {
       I.amOnPage("/items");
       I.shouldBeOnItemListPage(I => {
-        I.shouldBeOnItemDetailPage(I => {
-          I.fillField("カートに入れる数量", "11", I.findItem(itemName));
-        })
-        I.click("カートに入れる", I.findItem(name));
+        I.fillField("カートに入れる数量", "11", I.findItem(itemName));
+        I.click("カートに入れる", I.findItem(itemName));
       })
 
+      I.click("カートを見る");
       I.shouldBeOnOrderPage(() => {
-        I.click("カートを見る");
         I.fillField("お名前（受取時に必要です）", "ユーザー1");
         I.fillField("電話番号（連絡時に必要です）", "09000000000");
         I.fillField("受け取り日", utils.now.format("YYYY/MM/DD"));
