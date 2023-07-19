@@ -44,5 +44,6 @@ module.exports = {
     I.seeInCurrentUrl("/items");
     I.seeInCurrentUrl("/edit");
     I.seeInTitle("商品編集");
+    fn(I);
   },
 };

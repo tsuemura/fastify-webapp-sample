@@ -1,8 +1,6 @@
 // in this file you can append custom step methods to 'I' object
 
 const { amAnonimousUser, amStoreStaff } = require("./contexts/sessions")
-const { shouldBeOnItemListPage, shouldBeOnItemDetailPage, shouldBeOnOrderPage, shouldBeOnOrderCompletePage } = require("./contexts/pages")
-const { haveItem } = require("./contexts/prerequisites")
 
 module.exports = function() {
   return actor({
@@ -12,11 +10,6 @@ module.exports = function() {
 
     amAnonimousUser,
     amStoreStaff,
-    shouldBeOnItemListPage,
-    shouldBeOnItemDetailPage,
-    shouldBeOnOrderPage,
-    shouldBeOnOrderCompletePage,
-    haveItem,
 
   });
 }
