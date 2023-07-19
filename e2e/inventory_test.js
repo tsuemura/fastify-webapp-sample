@@ -22,7 +22,7 @@ Scenario(
     I.fillField("価格", "500");
     I.click("追加");
 
-    // ## 店舗スタッフはある商品のデフォルトの注文可能数を5個に設定する。
+    // ## 店舗スタッフはある商品のデフォルトの注文可能数を10個に設定する。
 
     // 店舗スタッフとしてログインする。
     // 事前準備でログイン済みのため省略。
@@ -36,12 +36,17 @@ Scenario(
     I.fillField("デフォルトの注文可能数", "10");
     I.click("変更");
 
-    // ## ユーザーはその商品を当日に5個注文する。
+    // ## ユーザーはその商品を当日に10個注文する。
 
     session("user", () => {
       // 商品を10個カートに入れる。
       I.amOnPage("/items");
-      I.fillField("カートに入れる数量", "10", itemContainer);
+      I.fillField(
+        locate("input").after(
+          locate("label").withText("カートに入れる数量").inside(itemContainer)
+        ),
+        "10"
+      );
       I.click("カートに入れる", itemContainer);
 
       // 注文画面を開き、当日の日付を入力する。
