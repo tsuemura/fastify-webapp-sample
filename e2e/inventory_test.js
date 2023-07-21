@@ -10,7 +10,7 @@ Scenario(
       itemName = I.haveItem();
       I.amOnPage("/items");
       I.shouldBeOnItemListPage((I) => {
-        I.click(I.findItem(itemName).find("a").withText("商品を編集"));
+        I.click(I.locateWithinItem().商品を編集);
         I.shouldBeOnItemDetailPage((I) => {
           I.fillField("デフォルトの注文可能数", "10");
           I.click("変更");
