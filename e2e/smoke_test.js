@@ -6,7 +6,7 @@ Scenario('Access to example.com', ({ I }) => {
 });
 
 
-Scenario('Webサイトを開きログインする', ({ I, utils }) => {
+Scenario('Webサイトを開きログインする', async ({ I, utils }) => {
   I.amOnPage("/"); // BASE_URLからの相対パスに書き換える
   I.click("ログインする");
   I.fillField("ユーザー名", "user1");
