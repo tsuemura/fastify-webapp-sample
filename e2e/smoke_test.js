@@ -1,14 +1,13 @@
-SuiteOf('Smoke test');
+SuiteOf('スモークテスト');
 
-Scenario('Access to example.com', ({ I }) => {
-  I.amOnPage('https://example.com')
-  I.see('Example Domain')
+Scenario("example.comにアクセスする", ({ I }) => {
+  I.amOnPage("https://example.com");
+  I.see("Example Domain");
 });
 
-Scenario('Login and confirm order', async ({ I, utils }) => {
 
-  // 一般ユーザーとしてログインする
-  I.amOnPage("/");
+Scenario('Webサイトを開きログインする', async ({ I, utils }) => {
+  I.amOnPage("/"); // BASE_URLからの相対パスに書き換える
   I.click("ログインする");
   I.fillField("ユーザー名", "user1");
   I.fillField("パスワード", "super-strong-passphrase");

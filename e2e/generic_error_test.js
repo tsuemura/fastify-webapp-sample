@@ -1,7 +1,7 @@
-SuiteOf("Generic error test scenarios");
+SuiteOf("一般的なエラーのテスト");
 
 Scenario(
-  "When a user access to a dead link, the user will see pretty error message and the link to the item list",
+  "ユーザーが存在しないURLにアクセスすると、エラーメッセージと商品一覧へのリンクが表示される",
   ({ I }) => {
     I.amOnPage("/undefined");
     I.see("お探しのページは見つかりませんでした。");
