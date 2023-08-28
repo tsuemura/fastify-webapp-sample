@@ -1,8 +1,8 @@
 SuiteOf('スモークテスト');
 
-Scenario('Access to example.com', ({ I }) => {
-  I.amOnPage('https://example.com')
-  I.see('Example Domain')
+Scenario("example.comにアクセスする", ({ I }) => {
+  I.amOnPage("https://example.com");
+  I.see("Example Domain");
 });
 
 Scenario('Webサイトを開きログインする', ({ I }) => {
