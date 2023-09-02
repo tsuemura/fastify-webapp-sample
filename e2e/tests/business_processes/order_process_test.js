@@ -1,12 +1,6 @@
-SuiteOf('スモークテスト');
+SuiteOf('注文プロセスのテスト');
 
-Scenario("example.comにアクセスする", ({ I }) => {
-  I.amOnPage("https://example.com");
-  I.see("Example Domain");
-});
-
-
-Scenario('Webサイトを開きログインする', async ({ I, utils }) => {
+Scenario('ログインし、お弁当を注文し、お弁当を受け取る', async ({ I, utils }) => {
   I.amOnPage("/"); // BASE_URLからの相対パスに書き換える
   I.click("ログインする");
   I.fillField("ユーザー名", "user1");
