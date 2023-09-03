@@ -9,7 +9,7 @@ require('dotenv').config(); // dotenvを読み込む
 
 /** @type {CodeceptJS.MainConfig} */
 exports.config = {
-  tests: "./**/*_test.js",
+  tests: "./tests/*/*_test.js",
   output: "./output",
   helpers: {
     Playwright: {
