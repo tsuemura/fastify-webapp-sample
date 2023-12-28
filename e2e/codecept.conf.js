@@ -25,4 +25,15 @@ exports.config = {
   translation: "en-US",
   vocabularies: ["./vocabularies.json"],
   name: "e2e",
+  plugins: {
+    allure: {
+      enabled: true,
+      require: "allure-codeceptjs",
+    },
+    stepByStepReport: {
+      enabled: true,
+      screenshotsForAllureReport: true,
+      deleteSuccessful: false,
+    },
+  },
 };

@@ -27,6 +27,6 @@ jobs:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_STAGING_TOKEN }}
 
       - name: Deploy
-        run: railway up
+        run: railway up --service fastify-webapp-sample
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_STAGING_TOKEN }}
