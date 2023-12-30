@@ -9,7 +9,7 @@ require('dotenv').config(); // dotenvを読み込む
 
 /** @type {CodeceptJS.MainConfig} */
 exports.config = {
-  tests: "./**/*_test.js",
+  tests: "./tests/**/*_test.js",
   output: "./output",
   helpers: {
     Playwright: {
@@ -25,4 +25,15 @@ exports.config = {
   translation: "en-US",
   vocabularies: ["./vocabularies.json"],
   name: "e2e",
+  plugins: {
+    allure: {
+      enabled: true,
+      require: "allure-codeceptjs",
+    },
+    stepByStepReport: {
+      enabled: true,
+      screenshotsForAllureReport: true,
+      deleteSuccessful: false,
+    },
+  },
 };
