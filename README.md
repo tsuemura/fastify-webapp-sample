@@ -12,11 +12,11 @@
 ```bash
 # NodeJSがインストールされているかどうかを確認。
 $ node --version
-v14.17.6
+v20.14.0
 
 # NodeJSのパッケージマネージャー npm がインストールされているかどうかを確認。通常はNodeJSが入っていればnpmも一緒に使えるようになるはずです。
 $ npm --version
-8.5.3
+10.7.0
 ```
 
 また、バックエンドのデータベースとして [PostgreSQL](https://www.postgresql.org/) を利用しています。これを起動するために [Docker](https://www.docker.com/) のインストールが必要です。詳しいインスール手順については公式の [Get Started](https://www.docker.com/get-started/) を参考にしてください。
@@ -70,7 +70,7 @@ See 'docker run --help'.
 
 最初に、開発に必要なパッケージを一通りインストールします。以下のコマンドでインストールできます。
 ```bash
-$ npm i
+$ npm install
 ```
 
 次に、アプリの起動に必要な情報を生成します。 `env.example` というファイルにサンプルを用意してあるので、これをそのままコピーしてしまいましょう。
@@ -123,7 +123,7 @@ Import: https://docs.github.com/ja/get-started/importing-your-projects-to-github
 
 ### Railway にデプロイする
 
-[Railway](https://railway.app/) はPostgreSQLなどのデータベースバックエンドを含むインフラストラクチャを簡単にデプロイするためのサービスです。2023年2月現在、無料の Starter Plan でも毎月 $5 の無料枠が付与されているため、練習用など、お試しでデプロイしてみたい場合などにも便利です。
+[Railway](https://railway.app/) はPostgreSQLなどのデータベースバックエンドを含むインフラストラクチャを簡単にデプロイするためのサービスです。2024年7月現在、最初に $5 の無料枠が付与され、以降は毎月 $5 の利用量 + メモリ・CPU・ネットワーク通信の費用が従量課金となります。
 
 #### 新しいプロジェクトをセットアップする
 
@@ -153,7 +153,11 @@ Import: https://docs.github.com/ja/get-started/importing-your-projects-to-github
 
 #### 環境変数を設定する
 
-次に、アプリを動かすために必要な環境変数をセットアップしましょう。 Railway はデフォルトでデータベースへの接続に関するものなどいくつかの環境変数を自動で設定してくれますが、 session secret と呼ばれるセッションの暗号化のためのキーは自分で設定しなければいけません。
+次に、アプリを動かすために必要な環境変数をセットアップしましょう。
+
+##### session secret の設定
+
+session secret と呼ばれるセッションの暗号化のためのキーを設定します。
 
 ![Set session secret](images/Set%20session%20secret.png)
 
@@ -162,6 +166,20 @@ Import: https://docs.github.com/ja/get-started/importing-your-projects-to-github
 ```bash
 $ openssl rand -hex 32
 ```
+
+##### データベースのアクセス情報
+
+データベースへのアクセス設定を追加します。
+
+- PGHOST
+- PGDATABASE
+- PGPASSWORD
+- PGPORT
+- PGUSER
+
+値には Postgres サービスのものを設定します。 Railway のドキュメントを参考に設定してください。
+
+https://docs.railway.app/guides/variables#autocomplete-dropdown
 
 #### ドメインを設定する
 
