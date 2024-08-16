@@ -6,7 +6,7 @@ Scenario('example.com にアクセス',  ({ I }) => {
 });
 
 Scenario('Webサイトを開きログインする', ({ I }) => {
-    I.amOnPage('http://localhost:8080');
+    I.amOnPage('/');
     // I.amOnPage('https://fastify-webapp-sample.takuyasuemura.dev/');
     I.click('ログインする');
     I.fillField('ユーザー名', 'user1');
