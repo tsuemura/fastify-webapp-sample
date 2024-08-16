@@ -3,21 +3,25 @@ export default async function loginRoutes(server, options) {
 
   server.get("/login", async (request, reply) => {
     if (request.user) {
-      await reply.redirect(302, "/items")
+      return reply.redirect(302, "/items")
     }
-    await reply.view("/src/views/login.ejs");
+    return reply.view("/src/views/login.ejs");
   });
 
   server.post(
     "/login",
     {
       preValidation: passport.authenticate("local", {
-        successRedirect: "/items",
+        //successRedirect: "/items",
         authInfo: false,
       }),
     },
     async (request, reply) => {
-      reply.redirect("/items");
+      if (request.isAuthenticated()) {
+        return reply.redirect("/items");
+      } else {
+        return reply.redirect("/login");
+      }
     }
   );
 
@@ -25,7 +29,7 @@ export default async function loginRoutes(server, options) {
     '/logout',
     async (request, reply) => {
       await request.logOut()
-      reply.redirect(302, '/login')
+      return reply.redirect(302, '/login')
     }
   )
 }
