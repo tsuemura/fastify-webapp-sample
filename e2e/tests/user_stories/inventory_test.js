@@ -56,7 +56,7 @@ Scenario(
       I.fillField("受け取り日", utils.now.format("YYYY/MM/DD"));
       I.fillField(
         "受け取り目安時間",
-        utils.now.add(1, "hour").format("HH:mmA")
+        utils.now.add(1, "hour").format("hh:mmA")
       );
 
       // 注文を確定する。
@@ -122,7 +122,7 @@ Scenario(
       I.fillField("受け取り日", utils.now.format("YYYY/MM/DD"));
       I.fillField(
         "受け取り目安時間",
-        utils.now.add(1, "hour").format("HH:mmA")
+        utils.now.add(1, "hour").format("hh:mmA")
       );
 
       // 注文を確定する。
