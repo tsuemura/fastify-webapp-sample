@@ -12,7 +12,6 @@ export default async function loginRoutes(server, options) {
     "/login",
     {
       preValidation: passport.authenticate("local", {
-        successRedirect: "/items",
         authInfo: false,
       }),
     },
