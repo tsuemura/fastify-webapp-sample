@@ -43,6 +43,10 @@ server.get('/', (request, reply) => {
   reply.redirect(302, '/items')
 })
 
+server.setNotFoundHandler(function (request, reply) {
+  reply.view('src/views/404.ejs');
+});
+
 server.listen({ host: '0.0.0.0', port: process.env.PORT || 8080 }, (err, address) => {
   if (err) {
     console.error(err);
