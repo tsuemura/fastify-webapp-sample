@@ -16,6 +16,7 @@
     "playwright": "^1.30.0"
   },
   "devDependencies": {
-    "dotenv": "^16.4.7"
+    "dotenv": "^16.4.7",
+    "start-server-and-test": "^2.0.10"
   }
 }
