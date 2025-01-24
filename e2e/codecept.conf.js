@@ -1,4 +1,5 @@
 const { setHeadlessWhen, setCommonPlugins } = require('@codeceptjs/configure');
+require('dotenv').config(); 
 // turn on headless mode when running with HEADLESS=true environment variable
 // export HEADLESS=true && npx codeceptjs run
 setHeadlessWhen(process.env.HEADLESS);
@@ -12,7 +13,7 @@ exports.config = {
   output: './output',
   helpers: {
     Playwright: {
-      url: 'http://localhost',
+      url: process.env.BASE_URL,	    
       show: true,
       browser: 'chromium'
     }
@@ -22,5 +23,16 @@ exports.config = {
   },
   translation: "en-US",
   vocabularies: ["./vocabularies.json"],
-  name: 'e2e'
-}
+  name: 'e2e',
+  plugins: {
+    allure: {
+      enabled: true,
+      require: "allure-codeceptjs",
+    },
+    stepByStepReport: {
+      enabled: true,
+      screenshotsForAllureReport: true,
+      deleteSuccessful: false,
+    },
+  },
+ }

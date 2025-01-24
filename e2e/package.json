@@ -10,7 +10,12 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "allure-codeceptjs": "^2.15.1",
+    "allure-commandline": "^2.32.0",
     "codeceptjs": "^3.3.7",
     "playwright": "^1.30.0"
+  },
+  "devDependencies": {
+    "dotenv": "^16.4.7"
   }
 }
