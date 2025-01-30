@@ -3,6 +3,12 @@
 [Fastify](https://www.fastify.io/) を使って作ったWebアプリケーションのサンプルです。
 お弁当注文アプリを模して作られています。
 
+## 書籍「テスト自動化実践ガイド」よりこちらにいらした方へ
+
+書籍のサポートサイトをご用意してあります。セットアップやデプロイ時のエラーなどについてはこちらもお読みいただけますと幸いです。
+
+https://github.com/tsuemura/practical-guide-for-test-automation-support
+
 ## ローカル環境で起動する
 
 ### 事前準備
